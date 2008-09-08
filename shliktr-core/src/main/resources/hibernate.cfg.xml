@@ -1,0 +1,28 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+<!-- VERSION = $Id$ $Rev: 10305 $ $Date: 2007-10-17 15:29:41 -0700 (Wed, 17 Oct 2007) $ -->
+
+<hibernate-configuration>
+
+	<session-factory>
+
+		<!--
+			use "session-per-thread" propagation
+			(see chap. 11 of "Java Persistence with Hibernate")
+			-->
+		<property name="current_session_context_class">thread</property>
+
+		<property name="show_sql">true</property>
+
+		<mapping class="org.lastbubble.shliktr.model.Player" />
+		<mapping class="org.lastbubble.shliktr.model.Team" />
+		<mapping class="org.lastbubble.shliktr.model.Game" />
+		<mapping class="org.lastbubble.shliktr.model.Week" />
+		<mapping class="org.lastbubble.shliktr.model.Pick" />
+		<mapping class="org.lastbubble.shliktr.model.Picks" />
+
+	</session-factory>
+
+</hibernate-configuration>

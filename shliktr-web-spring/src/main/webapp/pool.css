@@ -1,0 +1,13 @@
+body {
+	font-family: sans-serif;
+}
+
+.winningTeam {
+	background-color: pink;
+	font-weight: bold;
+}
+
+.losingTeam {
+	background-color: white;
+	font-weight: normal;
+}

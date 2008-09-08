@@ -1,0 +1,25 @@
+<dataset>
+	<team id="1" abbr="min" location="Minnesota" name="Vikings" />
+	<team id="2" abbr="gb" location="Green Bay" name="Packers" />
+
+	<week id="1" tiebreaker_answer="0" />
+	<game id="1"
+	      home_team_id="1" away_team_id="2"
+	      week_id="1"
+	      played_on="2008-12-21" />
+	<game id="2"
+	      home_team_id="2" away_team_id="1"
+	      week_id="1"
+	      played_on="2008-12-25" />
+
+	<week id="2" tiebreaker_answer="0" />
+	<game id="3"
+	      home_team_id="1" away_team_id="2"
+	      week_id="2"
+	      played_on="2008-11-01" />
+	<game id="4"
+	      home_team_id="2" away_team_id="1"
+	      week_id="2"
+	      played_on="2008-11-01" />
+
+</dataset>

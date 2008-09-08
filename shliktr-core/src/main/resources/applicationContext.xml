@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  VERSION = $Id$
+  -->
+	<beans xmlns="http://www.springframework.org/schema/beans"
+	       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	       xmlns:p="http://www.springframework.org/schema/p"
+	       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="poolDao"
+	      class="org.lastbubble.shliktr.dao.hibernate.PoolDaoHibernate">
+		<constructor-arg ref="sessionFactory" />
+	</bean>
+
+	<bean id="poolService"
+	      class="org.lastbubble.shliktr.dao.PoolServiceDaoImpl">
+		<constructor-arg ref="poolDao" />
+	</bean>
+
+	<bean id="sessionFactory"
+	      class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="configLocation">
+			<value>classpath:hibernate.cfg.xml</value>
+		</property>
+	</bean>
+
+
+	<!-- ==================================================================== -->
+	<!-- Transaction Management                                               -->
+	<!--                                                                      -->
+	<!-- See (section 8.5.1) of the Spring 1.2 documentation at:              -->
+	<!-- http://static.springframework.org/spring/docs/1.2.x/reference/       -->
+	<!-- ==================================================================== -->
+
+	<bean id="txManager"
+	      class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="txInterceptor"
+	      class="org.springframework.transaction.interceptor.TransactionInterceptor">
+		<property name="transactionManager" ref="txManager" />
+		<property name="transactionAttributeSource">
+			<bean class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+		</property>
+	</bean>
+
+	<bean class="org.springframework.transaction.interceptor.TransactionAttributeSourceAdvisor">
+		<property name="transactionInterceptor" ref="txInterceptor" />
+	</bean>
+
+	<bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />
+
+</beans>

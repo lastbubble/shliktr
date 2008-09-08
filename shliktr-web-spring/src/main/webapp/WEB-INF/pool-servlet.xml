@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+	<bean id="homeController"
+	      class="org.lastbubble.shliktr.web.HomeController"
+	      p:poolService-ref="poolService" />
+
+	<bean id="loginController"
+	      class="org.lastbubble.shliktr.web.LoginController" />
+
+	<bean id="viewWeekController"
+	      class="org.lastbubble.shliktr.web.ViewWeekController"
+	      p:poolService-ref="poolService" />
+
+	<bean id="editWeekController"
+	      class="org.lastbubble.shliktr.web.EditWeekController"
+	      p:poolService-ref="poolService" />
+
+	<bean id="viewPicksController"
+	      class="org.lastbubble.shliktr.web.ViewPicksController"
+	      p:poolService-ref="poolService" />
+
+	<bean id="addPicksController"
+	      class="org.lastbubble.shliktr.web.AddPicksController"
+	      p:poolService-ref="poolService" />
+
+	<bean id="editPicksController"
+	      class="org.lastbubble.shliktr.web.EditPicksController"
+	      p:poolService-ref="poolService" />
+
+	<bean id="viewResultsController"
+	      class="org.lastbubble.shliktr.web.ViewResultsController"
+	      p:poolService-ref="poolService" />
+
+	<bean id="predictResultsController"
+	      class="org.lastbubble.shliktr.web.PredictResultsController"
+	      p:poolService-ref="poolService" />
+
+  <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+		<property name="urlMap">
+			<map>
+				<entry key="/home" value-ref="homeController" />
+				<entry key="/index.html" value-ref="homeController" />
+				<entry key="/login" value-ref="loginController" />
+				<entry key="/viewWeek" value-ref="viewWeekController" />
+				<entry key="/editWeek" value-ref="editWeekController" />
+				<entry key="/viewPicks" value-ref="viewPicksController" />
+				<entry key="/addPicks" value-ref="addPicksController" />
+				<entry key="/editPicks" value-ref="editPicksController" />
+				<entry key="/viewResults" value-ref="viewResultsController" />
+				<entry key="/predictResults" value-ref="predictResultsController" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="viewResolver"
+	      class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/jsp/" />
+		<property name="suffix" value=".jsp" />
+	</bean>
+
+</beans>

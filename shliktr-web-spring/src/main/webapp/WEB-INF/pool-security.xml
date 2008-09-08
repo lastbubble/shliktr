@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	VERSION = $Id$
+	-->
+	<beans xmlns="http://www.springframework.org/schema/beans"
+	       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	       xmlns:p="http://www.springframework.org/schema/p"
+	       xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<bean id="filterChainProxy" class="org.acegisecurity.util.FilterChainProxy">
+		<property name="filterInvocationDefinitionSource">
+			<value><![CDATA[
+      CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+      PATTERN_TYPE_APACHE_ANT
+      /**=httpSessionContextIntegrationFilter,logoutFilter,authenticationProcessingFilter,playerAwareRequestFilter,anonymousProcessingFilter,exceptionTranslationFilter,filterInvocationInterceptor
+      ]]>
+			</value>
+		</property>
+	</bean>
+
+	<bean id="httpSessionContextIntegrationFilter"
+	      class="org.acegisecurity.context.HttpSessionContextIntegrationFilter" />
+
+	<bean id="logoutFilter" class="org.acegisecurity.ui.logout.LogoutFilter"
+		    p:filterProcessesUrl="/app/logout">
+		<constructor-arg value="/app/home">
+			<description>URL redirected to after logout</description>
+		</constructor-arg>
+		<constructor-arg>
+			<description>List of LogoutHandlers</description>
+			<list>
+				<bean class="org.acegisecurity.ui.logout.SecurityContextLogoutHandler" />
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="authenticationProcessingFilter"
+	      class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilter"
+	      p:authenticationManager-ref="authenticationManager"
+	      p:authenticationFailureUrl="/app/login?login_error=1"
+	      p:defaultTargetUrl="/app/viewWeek"
+	      p:filterProcessesUrl="/app/j_acegi_security_check" />
+
+	<bean id="playerAwareRequestFilter"
+	      class="org.lastbubble.shliktr.security.PlayerAwareRequestFilter" />
+
+	<bean id="anonymousProcessingFilter"
+	      class="org.acegisecurity.providers.anonymous.AnonymousProcessingFilter"
+	      p:key="nobody"
+	      p:userAttribute="nobody,ROLE_ANONYMOUS" />
+
+	<bean id="exceptionTranslationFilter"
+	      class="org.acegisecurity.ui.ExceptionTranslationFilter">
+		<property name="authenticationEntryPoint">
+			<bean id="authenticationProcessingFilterEntryPoint"
+			      class="org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint"
+			      p:loginFormUrl="/app/login"
+			      p:forceHttps="false" />
+		</property>
+		<property name="accessDeniedHandler">
+			<bean class="org.acegisecurity.ui.AccessDeniedHandlerImpl"
+			      p:errorPage="/accessDenied.html" />
+		</property>
+	</bean>
+
+	<bean id="filterInvocationInterceptor"
+	      class="org.acegisecurity.intercept.web.FilterSecurityInterceptor"
+	      p:authenticationManager-ref="authenticationManager">
+		<description>
+			Note the order that entries are placed against the objectDefinitionSource
+			is critical. The FilterSecurityInterceptor will work from the top of the
+			list down to the FIRST pattern that matches the request URL. Accordingly,
+			you should place MOST SPECIFIC (ie a/b/c/d.*) expressions first, with
+			LEAST SPECIFIC (ie a/.*) expressions last.
+		</description>
+		<property name="accessDecisionManager">
+			<bean id="httpRequestAccessDecisionManager"
+			      class="org.acegisecurity.vote.AffirmativeBased"
+			      p:allowIfAllAbstainDecisions="false">
+				<property name="decisionVoters">
+					<list>
+						<bean class="org.acegisecurity.vote.RoleVoter" />
+					</list>
+				</property>
+			</bean>
+		</property>
+		<property name="objectDefinitionSource">
+			<value><![CDATA[
+      CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON
+      PATTERN_TYPE_APACHE_ANT
+      /**/*.css=ROLE_ANONYMOUS,ROLE_PLAYER,ROLE_ADMIN
+      /**/*.gif=ROLE_ANONYMOUS,ROLE_PLAYER,ROLE_ADMIN
+      /app/home*=ROLE_ANONYMOUS,ROLE_PLAYER,ROLE_ADMIN
+      /**/login*=ROLE_ANONYMOUS,ROLE_PLAYER,ROLE_ADMIN
+      /app/viewresults*=ROLE_ANONYMOUS,ROLE_PLAYER,ROLE_ADMIN
+      /app/editweek*=ROLE_ADMIN
+      /app/addpicks*=ROLE_ADMIN
+      /**=ROLE_PLAYER,ROLE_ADMIN
+      ]]></value>
+		</property>
+	</bean>
+
+	<bean id="authenticationManager"
+	      class="org.acegisecurity.providers.ProviderManager">
+		<property name="providers">
+			<list>
+				<bean class="org.acegisecurity.providers.dao.DaoAuthenticationProvider">
+					<property name="userDetailsService">
+						<bean class="org.lastbubble.shliktr.security.PlayerUserDetailsService"
+						      p:poolService-ref="poolService" />
+					</property>
+					<property name="passwordEncoder">
+						<bean class="org.acegisecurity.providers.encoding.Md5PasswordEncoder" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+</beans>
