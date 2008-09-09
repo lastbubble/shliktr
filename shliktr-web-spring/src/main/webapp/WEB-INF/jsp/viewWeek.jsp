@@ -63,6 +63,8 @@
       <c:if test="${player != null}">
         <br />
         <a href="predictResults?weekId=${week.id}">Predict Results</a>
+        <br />
+        <a href="viewPickStats?weekId=${week.id}">Pick Statistics</a>
       </c:if>
     </div>
   </div>

@@ -41,6 +41,10 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 	      class="org.lastbubble.shliktr.web.PredictResultsController"
 	      p:poolService-ref="poolService" />
 
+	<bean id="viewPickStatsController"
+	      class="org.lastbubble.shliktr.web.ViewPickStatsController"
+	      p:poolService-ref="poolService" />
+
   <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="urlMap">
 			<map>
@@ -54,6 +58,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 				<entry key="/editPicks" value-ref="editPicksController" />
 				<entry key="/viewResults" value-ref="viewResultsController" />
 				<entry key="/predictResults" value-ref="predictResultsController" />
+				<entry key="/viewPickStats" value-ref="viewPickStatsController" />
 			</map>
 		</property>
 	</bean>

@@ -1,6 +1,7 @@
 package org.lastbubble.shliktr.dao;
 
 import org.lastbubble.shliktr.model.Picks;
+import org.lastbubble.shliktr.model.PickStats;
 import org.lastbubble.shliktr.model.Player;
 import org.lastbubble.shliktr.model.Week;
 
@@ -30,6 +31,8 @@ public interface PoolDao
 	List<Picks> findPicksForWeek( Week week );
 
 	Picks findPicksForPlayer( Week week, Player player );
+
+	List<PickStats> findPickStatsForWeek( Week week );
 
 	void refreshGamesForWeek( Week week );
 

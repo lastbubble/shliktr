@@ -2,6 +2,7 @@ package org.lastbubble.shliktr.service;
 
 import org.lastbubble.shliktr.model.Game;
 import org.lastbubble.shliktr.model.Picks;
+import org.lastbubble.shliktr.model.PickStats;
 import org.lastbubble.shliktr.model.Player;
 import org.lastbubble.shliktr.model.PlayerPrediction;
 import org.lastbubble.shliktr.model.PlayerScore;
@@ -37,14 +38,14 @@ public interface PoolService
 
 	List<PlayerScore> findScoresForWeek( Week week );
 
+	List<PickStats> findPickStatsForWeek( Week week );
+
 	Picks findPicksForPlayer( Week week, Player player, boolean create );
 
 	void makePersistentPicks( Picks picks );
 
 	Map<Player, PlayerPrediction> predictResults(
 		Week week, List<Winner> winners );
-
-	Map<String, List<Integer>> getPickStats( Week week );
 
 	void closeConnection();
 

@@ -1,0 +1,39 @@
+<dataset>
+	<team id="1" abbr="min" location="Minnesota" name="Vikings" />
+	<team id="2" abbr="gb" location="Green Bay" name="Packers" />
+	<team id="3" abbr="det" location="Detroit" name="Lions" />
+	<team id="4" abbr="chi" location="Chicago" name="Bears" />
+
+	<week id="1" tiebreaker_answer="0" />
+	<game id="1" week_id="1"
+	      home_team_id="1" away_team_id="2"
+	      home_score="0" away_score="0"
+	      played_on="2008-12-21" />
+	<game id="2" week_id="1"
+	      home_team_id="3" away_team_id="4"
+	      home_score="0" away_score="0"
+	      played_on="2008-12-21" />
+
+	<player id="1" name="player1" username="player1" active="1" />
+	<player id="2" name="player2" username="player2" active="1" />
+	<player id="3" name="player3" username="player3" active="1" />
+
+	<picks player_id="1" week_id="1" tiebreaker="0" />
+	<pick id="1" game_id="1" winner="HOME" ranking="1" />
+	<pick id="2" game_id="2" winner="HOME" ranking="2" />
+	<picks_pick picks_id="1" pick_id="1" />
+	<picks_pick picks_id="1" pick_id="2" />
+
+	<picks player_id="2" week_id="1" tiebreaker="0" />
+	<pick id="3" game_id="1" winner="AWAY" ranking="1" />
+	<pick id="4" game_id="2" winner="AWAY" ranking="1" />
+	<picks_pick picks_id="2" pick_id="3" />
+	<picks_pick picks_id="2" pick_id="4" />
+
+	<picks player_id="3" week_id="1" tiebreaker="0" />
+	<pick id="5" game_id="1" winner="HOME" ranking="2" />
+	<pick id="6" game_id="2" winner="AWAY" ranking="1" />
+	<picks_pick picks_id="3" pick_id="5" />
+	<picks_pick picks_id="3" pick_id="6" />
+
+</dataset>

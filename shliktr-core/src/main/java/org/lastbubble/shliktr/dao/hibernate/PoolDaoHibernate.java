@@ -2,14 +2,14 @@ package org.lastbubble.shliktr.dao.hibernate;
 
 import org.lastbubble.shliktr.dao.PoolDao;
 import org.lastbubble.shliktr.model.Game;
+import org.lastbubble.shliktr.model.Pick;
 import org.lastbubble.shliktr.model.Picks;
+import org.lastbubble.shliktr.model.PickStats;
 import org.lastbubble.shliktr.model.Player;
+import org.lastbubble.shliktr.model.Team;
 import org.lastbubble.shliktr.model.Week;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.hibernate.Criteria;
 import org.hibernate.LockMode;
@@ -142,6 +142,49 @@ public final class PoolDaoHibernate implements PoolDao
 		crit.add(Restrictions.eq("player", player));
 
 		return (Picks) crit.uniqueResult();
+	}
+
+	public List<PickStats> findPickStatsForWeek( Week week )
+	{
+		List<Pick> picks = (List<Pick>) getSession()
+			.createCriteria(Pick.class)
+			.createAlias("game", "game")
+			.add(Restrictions.eq("game.week", week))
+			.list();
+
+		Map<Team, PickStats> statsByTeam = new HashMap<Team, PickStats>();
+
+		for( Pick pick : picks )
+		{
+			Team team = null;
+
+			if( pick.getWinner() != null )
+			{
+				switch( pick.getWinner() )
+				{
+					case HOME: team = pick.getGame().getHomeTeam(); break;
+					case AWAY: team = pick.getGame().getAwayTeam(); break;
+				}
+			}
+
+			if( team == null ) continue;
+
+			PickStats stats = statsByTeam.get(team);
+
+			if( stats == null )
+			{
+				stats = new PickStats(team);
+				statsByTeam.put(team, stats);
+			}
+
+			stats.addRanking(pick.getRanking());
+		}
+
+		List<PickStats> pickStats = new ArrayList<PickStats>(statsByTeam.values());
+
+		Collections.sort(pickStats);
+
+		return pickStats;
 	}
 
 	public void refreshGamesForWeek( Week week )

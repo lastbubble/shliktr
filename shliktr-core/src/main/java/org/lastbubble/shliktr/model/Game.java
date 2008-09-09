@@ -26,6 +26,15 @@ public class Game
 	private int id;
 
 	@ManyToOne
+	@JoinColumn(
+		name = "week_id",
+		nullable = false,
+		insertable = false,
+		updatable = false
+	)
+	private Week week;
+
+	@ManyToOne
 	@JoinColumn(name = "home_team_id", nullable = false)
 	private Team homeTeam;
 

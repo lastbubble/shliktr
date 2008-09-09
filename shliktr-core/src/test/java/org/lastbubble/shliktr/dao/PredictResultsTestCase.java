@@ -46,6 +46,7 @@ public class PredictResultsTestCase extends PoolServiceTestCase
 	// PoolServiceTestCase methods
 	//---------------------------------------------------------------------------
 
+	@Override
 	protected void onSetUp()
 	{
 		expect(poolDao.findWeekById(week.getId())).andReturn(week).anyTimes();

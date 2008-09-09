@@ -117,6 +117,12 @@ public class PoolServiceDaoImpl implements PoolService
 	}
 
 	@Transactional(readOnly = false)
+	public List<PickStats> findPickStatsForWeek( Week week )
+	{
+		return this.dao.findPickStatsForWeek(week);
+	}
+
+	@Transactional(readOnly = false)
 	public Picks findPicksForPlayer( Week week, Player player, boolean create )
 	{
 		Picks picks = this.dao.findPicksForPlayer(week, player);
@@ -261,8 +267,6 @@ public class PoolServiceDaoImpl implements PoolService
 
 		return predictions;
 	}
-
-	public Map<String, List<Integer>> getPickStats( Week week ) { return null; }
 
 	public void closeConnection() { }
 

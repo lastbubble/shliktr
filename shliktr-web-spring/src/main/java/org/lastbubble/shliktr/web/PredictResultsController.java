@@ -97,13 +97,16 @@ public class PredictResultsController extends AbstractController
 	public static class Prediction
 	{
 		private Player player;
-		private int winningOutcomeCnt;
+		private int outcomeCnt;
+		private List<String> outcomes;
 		private String mustWins;
 
-		public Prediction( Player player, int winningOutcomeCnt, String mustWins )
+		public Prediction(
+			Player player, int outcomeCnt, List<String> outcomes, String mustWins )
 		{
 			this.player = player;
-			this.winningOutcomeCnt = winningOutcomeCnt;
+			this.outcomeCnt = outcomeCnt;
+			this.outcomes = outcomes;
 			this.mustWins = mustWins;
 		}
 
@@ -111,7 +114,18 @@ public class PredictResultsController extends AbstractController
 			PlayerPrediction playerPrediction, List<Game> games )
 		{
 			Player player = playerPrediction.getPlayer();
-			int outcomeCnt = playerPrediction.getWinningOutcomes().size();
+
+			List<String> winningOutcomes = playerPrediction.getWinningOutcomes();
+			int outcomeCnt = winningOutcomes.size();
+
+			List<String> outcomes = new ArrayList<String>();
+			if( outcomeCnt <= 16 )
+			{
+				for( String outcome : winningOutcomes )
+				{
+					outcomes.add(describeOutcome(outcome, games));
+				}
+			}
 
 			StringBuilder buf = new StringBuilder();
 
@@ -133,12 +147,33 @@ public class PredictResultsController extends AbstractController
 				}
 			}
 
-			return new Prediction(player, outcomeCnt, buf.toString());
+			return new Prediction(player, outcomeCnt, outcomes, buf.toString());
+		}
+
+		public static String describeOutcome( String outcome, List<Game> games )
+		{
+			StringBuilder buf = new StringBuilder();
+
+			int cnt = Math.min(outcome.length(), games.size());
+			for( int i = 0; i < cnt; i++ )
+			{
+				if( buf.length() > 0 ) buf.append(", ");
+
+				Game game = games.get(i);
+				buf.append(outcome.charAt(i) == '1' ?
+					game.getHomeTeam().getAbbr().toUpperCase() :
+					game.getAwayTeam().getAbbr().toUpperCase()
+				);
+			}
+
+			return buf.toString();
 		}
 
 		public Player getPlayer() { return this.player; }
 
-		public int getWinningOutcomeCount() { return this.winningOutcomeCnt; }
+		public int getOutcomeCount() { return this.outcomeCnt; }
+
+		public List<String> getOutcomes() { return this.outcomes; }
 
 		public String getMustWins() { return this.mustWins; }
 	}
