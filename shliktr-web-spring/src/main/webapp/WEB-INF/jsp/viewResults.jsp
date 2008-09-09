@@ -17,14 +17,25 @@
 
   <%@ include file="/WEB-INF/jsp/welcome.jsp" %>
 
-  <table>
-  <c:forEach items="${scores}" var="score">
-  <tr>
-	<td>${score.player.name}</td>
-	<td>${score.score}</td>
-	<td>${score.record}</td>
-  </tr>
-  </c:forEach>
+  <table border="1" cellpadding="3">
+    <tr>
+      <th>Player</th>
+      <th>Score</th>
+      <th>W-L</th>
+      <th>Tiebreaker (Diff.)</th>
+      <th>Points lost</th>
+      <th>Points remaining</th>
+    </tr>
+    <c:forEach items="${scores}" var="score">
+    <tr align="right">
+      <td>${score.player.name}</td>
+      <td>${score.score}</td>
+      <td>${score.record}</td>
+      <td>${score.tiebreaker}&nbsp;(${score.tiebreakerDiff})</td>
+      <td>${score.lost}</td>
+      <td>${score.remaining}</td>
+    </tr>
+    </c:forEach>
   </table>
 
   <h2>Tiebreaker</h2>

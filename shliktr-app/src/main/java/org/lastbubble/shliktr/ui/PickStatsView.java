@@ -51,7 +51,7 @@ public class PickStatsView implements View
 
 		List<TeamStats> stats = new ArrayList<TeamStats>();
 
-		Map<String, List<Integer>> m = this.poolService.getPickStats(week);
+		Map<String, List<Integer>> m = Collections.EMPTY_MAP;//this.poolService.getPickStats(week);
 		for( String team : m.keySet() )
 		{
 			stats.add( new TeamStats(team, m.get(team)));
