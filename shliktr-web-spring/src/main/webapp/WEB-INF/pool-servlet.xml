@@ -8,6 +8,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 
 	<bean id="homeController"
 	      class="org.lastbubble.shliktr.web.HomeController"
+	      p:viewName="home"
 	      p:poolService-ref="poolService" />
 
 	<bean id="loginController"
@@ -15,6 +16,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 
 	<bean id="viewWeekController"
 	      class="org.lastbubble.shliktr.web.ViewWeekController"
+	      p:viewName="viewWeek"
 	      p:poolService-ref="poolService" />
 
 	<bean id="editWeekController"
@@ -23,6 +25,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 
 	<bean id="viewPicksController"
 	      class="org.lastbubble.shliktr.web.ViewPicksController"
+	      p:viewName="viewPicks"
 	      p:poolService-ref="poolService" />
 
 	<bean id="addPicksController"
@@ -35,14 +38,17 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 
 	<bean id="viewResultsController"
 	      class="org.lastbubble.shliktr.web.ViewResultsController"
+	      p:viewName="viewResults"
 	      p:poolService-ref="poolService" />
 
 	<bean id="predictResultsController"
 	      class="org.lastbubble.shliktr.web.PredictResultsController"
+	      p:viewName="predictResults"
 	      p:poolService-ref="poolService" />
 
 	<bean id="viewPickStatsController"
 	      class="org.lastbubble.shliktr.web.ViewPickStatsController"
+	      p:viewName="viewPickStats"
 	      p:poolService-ref="poolService" />
 
   <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">

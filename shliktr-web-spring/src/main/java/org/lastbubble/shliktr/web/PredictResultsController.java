@@ -5,59 +5,28 @@ import org.lastbubble.shliktr.model.Player;
 import org.lastbubble.shliktr.model.PlayerPrediction;
 import org.lastbubble.shliktr.model.Week;
 import org.lastbubble.shliktr.model.Winner;
-import org.lastbubble.shliktr.service.PoolService;
 
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 
 /**
  * @version $Id$
  */
-public class PredictResultsController extends AbstractController
+public class PredictResultsController extends WeekController
 {
-	private PoolService poolService;
-
-
 	//-------------------------------------------------------------------------
-	// Properties
-	//-------------------------------------------------------------------------
-
-	public void setPoolService( PoolService ps ) { this.poolService = ps; }
-
-
-	//-------------------------------------------------------------------------
-	// AbstractController methods
+	// WeekController methods
 	//-------------------------------------------------------------------------
 
 	@Override
-	protected ModelAndView handleRequestInternal(
-		HttpServletRequest request, HttpServletResponse response )
-	throws Exception
+	protected ModelAndView handleWeek( ModelAndView modelAndView,
+		Week week, Player player )
 	{
-		Map model = new HashMap();
-
-		int weekId = 1;
-
-		String s = request.getParameter("weekId");
-		if( s != null && s.length() > 0 )
-		{
-			try { weekId = Integer.parseInt(s); }
-			catch( NumberFormatException e ) { }
-		}
-
-		Week week = this.poolService.findWeekById(weekId);
-		model.put("week", week);
-
-		Player player = WebUtils.getPlayerFromRequest(request);
-		model.put("player", player);
-
 		List<Prediction> predictions = new ArrayList<Prediction>();
-		model.put("predictions", predictions);
+		modelAndView.addObject("predictions", predictions);
 
 		List<Game> games = week.getGames();
 		List<Winner> winners = new ArrayList<Winner>(games.size());
@@ -86,7 +55,7 @@ public class PredictResultsController extends AbstractController
 			predictions.add(Prediction.create(playerPrediction, unfinished));
 		}
 
-		return new ModelAndView("predictResults", model);
+		return modelAndView;
 	}
 
 
