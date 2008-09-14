@@ -11,6 +11,7 @@
 	<name>shliktr</name>
 	<modules>
 		<module>shliktr-core</module>
+		<module>shliktr-tools</module>
 		<module>shliktr-app</module>
 		<module>shliktr-web-spring</module>
 	</modules>

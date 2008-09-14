@@ -1,5 +1,9 @@
 package org.lastbubble.shliktr.service;
 
+import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IPoolEntry;
+import org.lastbubble.shliktr.IWeek;
+
 import org.lastbubble.shliktr.model.Game;
 import org.lastbubble.shliktr.model.Picks;
 import org.lastbubble.shliktr.model.PickStats;
@@ -24,17 +28,19 @@ public interface PoolService
 
 	boolean acceptPicksForWeek( Integer id );
 
-	void makePersistentWeek( Week week );
+	void makePersistentWeek( IWeek week );
 
 	List<Player> findAllPlayers();
 
-	Set<Player> findPlayersForWeek( Week week );
+	Set<Player> findPlayersForWeek( IWeek week );
 
 	Player findPlayerById( Integer id );
 
 	Player findPlayerByName( String name );
 
-	List<Picks> findPicksForWeek( Week week );
+	IPlayer findPlayerByUsername( String username );
+
+	List<Picks> findPicksForWeek( IWeek week );
 
 	List<PlayerScore> findScoresForWeek( Week week );
 
@@ -42,7 +48,11 @@ public interface PoolService
 
 	Picks findPicksForPlayer( Week week, Player player, boolean create );
 
+	IPoolEntry findEntry( IWeek week, IPlayer player, boolean create );
+
 	void makePersistentPicks( Picks picks );
+
+	void saveEntry( IPoolEntry entry );
 
 	Map<Player, PlayerPrediction> predictResults(
 		Week week, List<Winner> winners );

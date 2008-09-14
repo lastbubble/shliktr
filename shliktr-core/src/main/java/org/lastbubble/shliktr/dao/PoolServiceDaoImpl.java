@@ -1,5 +1,8 @@
 package org.lastbubble.shliktr.dao;
 
+import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IPoolEntry;
+import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.model.*;
 import org.lastbubble.shliktr.service.PoolService;
 
@@ -32,7 +35,7 @@ public class PoolServiceDaoImpl implements PoolService
 		Week week = this.dao.findWeekById(id);
 
 		// trigger fetching
-		week.getGameCount();
+		week.getGames().size();
 
 		return week;
 	}
@@ -43,7 +46,7 @@ public class PoolServiceDaoImpl implements PoolService
 		Week week = this.dao.findCurrentWeek();
 
 		// trigger fetching
-		week.getGameCount();
+		week.getGames().size();
 
 		return week;
 	}
@@ -62,7 +65,7 @@ public class PoolServiceDaoImpl implements PoolService
 	}
 
 	@Transactional(readOnly = true)
-	public Set<Player> findPlayersForWeek( Week week )
+	public Set<Player> findPlayersForWeek( IWeek week )
 	{
 		return this.dao.findPlayersForWeek(week);
 	}
@@ -84,7 +87,13 @@ public class PoolServiceDaoImpl implements PoolService
 	}
 
 	@Transactional(readOnly = true)
-	public List<Picks> findPicksForWeek( Week week )
+	public IPlayer findPlayerByUsername( String username )
+	{
+		return this.dao.findPlayerByUsername(username);
+	}
+
+	@Transactional(readOnly = true)
+	public List<Picks> findPicksForWeek( IWeek week )
 	{
 		List<Picks> weekPicks = this.dao.findPicksForWeek(week);
 
@@ -144,15 +153,47 @@ public class PoolServiceDaoImpl implements PoolService
 	}
 
 	@Transactional(readOnly = false)
-	public void makePersistentWeek( Week week )
+	public Picks findEntry( IWeek week, IPlayer player, boolean create )
 	{
-		this.dao.makePersistentWeek(week);
+		Picks picks = this.dao.findPicksForPlayer(week, player);
+
+		if( picks == null && create )
+		{
+			picks = Picks.createForPlayer(
+				this.dao.findWeekById(week.getWeekNumber()),
+				this.dao.findPlayerByUsername(player.getUsername())
+			);
+		}
+
+		// trigger fetching
+		if( picks != null )
+		{
+			picks.getPlayer();
+			picks.getWeek();
+			picks.size();
+		}
+
+		return picks;
+	}
+
+	@Transactional(readOnly = false)
+	public void makePersistentWeek( IWeek week )
+	{
+		if( week instanceof Week )
+			this.dao.makePersistentWeek((Week) week);
 	}
 
 	@Transactional(readOnly = false)
 	public void makePersistentPicks( Picks picks )
 	{
 		this.dao.makePersistentPicks(picks);
+	}
+
+	@Transactional(readOnly = false)
+	public void saveEntry( IPoolEntry entry )
+	{
+		if( entry instanceof Picks )
+			this.dao.makePersistentPicks((Picks) entry);
 	}
 
 	@Transactional(readOnly = true)

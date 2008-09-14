@@ -1,5 +1,7 @@
 package org.lastbubble.shliktr.model;
 
+import org.lastbubble.shliktr.IPick;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -20,7 +22,7 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(name = "pick")
-public class Pick
+public class Pick implements IPick
 {
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
@@ -136,4 +138,4 @@ public class Pick
 		return buf.toString();
 	}
 
-}	// End of Pick
+}

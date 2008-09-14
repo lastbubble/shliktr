@@ -1,7 +1,8 @@
 package org.lastbubble.shliktr.web;
 
+import org.lastbubble.shliktr.IPick;
+import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.model.Pick;
-import org.lastbubble.shliktr.model.Picks;
 import org.lastbubble.shliktr.model.Player;
 import org.lastbubble.shliktr.model.Week;
 import org.lastbubble.shliktr.model.Winner;
@@ -133,11 +134,12 @@ public class AddPicksController extends SimpleFormController
 			return mv;
 		}
 
-		Picks picks = this.poolService.findPicksForPlayer(week, player, true);
-
 		Pick[] newPicks = picksForm.getPicks();
-		List<Pick> pickList = picks.getPicks();
-		for( Pick pick : pickList )
+
+		IPoolEntry entry = this.poolService.findEntry(week, player, true);
+
+		List<? extends IPick> picks = entry.getPicks();
+		for( IPick pick : picks )
 		{
 			for( int i = 0; i < newPicks.length; i++ )
 			{
@@ -149,9 +151,9 @@ public class AddPicksController extends SimpleFormController
 			}
 		}
 
-		picks.setTiebreaker(picksForm.getTiebreaker());
+		entry.setTiebreaker(picksForm.getTiebreaker());
 
-		this.poolService.makePersistentPicks(picks);
+		this.poolService.saveEntry(entry);
 
 		ModelAndView mv = new ModelAndView(getSuccessView());
 		mv.addObject("weekId", week.getId());

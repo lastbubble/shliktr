@@ -1,5 +1,7 @@
 package org.lastbubble.shliktr.model;
 
+import org.lastbubble.shliktr.IWeek;
+
 import java.util.*;
 
 import javax.persistence.CascadeType;
@@ -9,24 +11,21 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * @version $Id: Week.java 59 2007-11-26 05:32:22Z eheaton $
  */
 @Entity
 @Table(name = "week")
-public class Week
+public final class Week implements IWeek
 {
-	@Id
 	private Integer id;
 
-	@OneToMany(cascade = {CascadeType.ALL})
-	@JoinColumn(name = "week_id", nullable = false)
-	private List<Game> games;
+	private List<Game> games = Collections.EMPTY_LIST;
 
 	private String tiebreaker;
 
-	@Column(name = "tiebreaker_answer")
 	private int tiebreakerAnswer;
 
 
@@ -34,91 +33,71 @@ public class Week
 	// Constructor
 	//-------------------------------------------------------------------------
 
+	/* TODO: make this package-private */
 	public Week() { }
 
-	public Week( Integer id, List<Game> games )
-	{
-		this.id = id;
-		this.games = games;
-	}
-
 
 	//-------------------------------------------------------------------------
-	// Methods
+	// Properties
 	//-------------------------------------------------------------------------
 
+	@Id
 	public Integer getId() { return this.id; }
-
 	void setId( Integer n ) { this.id = n; }
 
+	/** @see	IWeek#getWeekNumber */
+	@Transient
+	public int getWeekNumber() { return (this.id != null) ? this.id : 0; }
+
+	/** @see	IWeek#getGames */
+	@OneToMany(cascade = {CascadeType.ALL})
+	@JoinColumn(name = "week_id", nullable = false)
 	public List<Game> getGames()
 	{
 		return Collections.unmodifiableList(this.games);
 	}
+	void setGames( List<Game> games ) { this.games = games; }
 
-	void setGames( List<Game> l ) { this.games = l; }
-
-	public int getGameCount() { return this.games.size(); }
-
-	public Game getGameAt( int i ) { return this.games.get(i); }
-
-	public Game findGameById( Integer gameId )
-	{
-		Game game = null;
-
-		for( int i = 0, cnt = getGameCount(); i < cnt; i++ )
-		{
-			if( getGameAt(i).getId().equals(gameId) )
-			{
-				return getGameAt(i);
-			}
-		}
-
-		return game;
-	}
-
+	@Column(name = "tiebreaker")
 	public String getTiebreaker() { return this.tiebreaker; }
 
+	/** @see	IWeek#setTiebreaker */
 	public void setTiebreaker( String s ) { this.tiebreaker = s; }
 
+	/** @see	IWeek#getTiebreakerAnswer */
+	@Column(name = "tiebreaker_answer")
 	public int getTiebreakerAnswer() { return this.tiebreakerAnswer; }
 
+	/** @see	IWeek#setTiebreakerAnswer */
 	public void setTiebreakerAnswer( int n ) { this.tiebreakerAnswer = n; }
 
-	public Date getStart()
-	{
-		Date date = new Date(Long.MAX_VALUE);
 
-		for( int i = 0, cnt = getGameCount(); i < cnt; i++ )
-		{
-			Date gameDate = getGameAt(i).getPlayedOn();
-			if( gameDate != null && gameDate.compareTo(date) < 0 )
-			{
-				date = gameDate;
-			}
-		}
-
-		return date;
-	}
-
-	public int hashCode() { return getId().hashCode(); }
+	//---------------------------------------------------------------------------
+	// Methods
+	//---------------------------------------------------------------------------
 
 	public boolean equals( Object obj )
 	{
-		if(! (obj instanceof Week) ) return false;
+		if( obj == this ) return true;
 
-		return ((Week) obj).getId().equals(getId());
+		if( obj instanceof Week )
+		{
+			return getWeekNumber() == ((Week) obj).getWeekNumber();
+		}
+
+		return false;
 	}
 
-	/** @return	a String representation of the week. */
+	public int hashCode() { return getWeekNumber(); }
+
 	public String toString()
 	{
-		StringBuffer buf = new StringBuffer();
-
-		buf.append("WEEK ");
-		buf.append(getId());
-
-		return buf.toString();
+		return new StringBuilder()
+			.append(getClass().getName())
+			.append('[')
+			.append("weekNumber=")
+			.append(getWeekNumber())
+			.append(']')
+			.toString();
 	}
-
-}	// End of Week
+}

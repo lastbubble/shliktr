@@ -1,5 +1,7 @@
 package org.lastbubble.shliktr.model;
 
+import org.lastbubble.shliktr.impl.PlayerImpl;
+
 import java.io.Serializable;
 
 import java.util.*;
@@ -18,76 +20,40 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "player")
-public final class Player implements Comparable<Player>, Serializable
+public final class Player extends PlayerImpl implements Serializable
 {
-	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
-
-	@Column(length = 16, nullable = false, unique = true)
-	private String username;
-
-	@Column(length = 32, nullable = false, unique = true)
-	private String name;
-
-	@Column(length = 32)
-	private String password;
-
-	@Column(name = "email")
-	private String emailAddress;
-
-	private boolean active;
 
 
 	//-------------------------------------------------------------------------
 	// Constructor
 	//-------------------------------------------------------------------------
 
-	public Player() { }
+	Player() { super(); }
 
-	public Player( String username )
-	{
-		this.username = username;
-	}
+	public Player( String username ) { super(username); }
 
 
 	//-------------------------------------------------------------------------
 	// Methods
 	//-------------------------------------------------------------------------
 
+	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer getId() { return this.id; }
-
 	void setId( Integer id ) { this.id = id; }
 
-	public String getUsername() { return this.username; }
+	@Column(length = 16, nullable = false, unique = true)
+	public String getUsername() { return super.getUsername(); }
 
-	public String getName() { return this.name; }
+	@Column(length = 32, nullable = false, unique = true)
+	public String getName() { return super.getName(); }
 
-	public void setName( String s ) { this.name = s; }
+	@Column(length = 32)
+	public String getPassword() { return super.getPassword(); }
 
-	public String getPassword() { return this.password; }
+	@Column(name = "email")
+	public String getEmailAddress() { return super.getEmailAddress(); }
 
-	public String getEmailAddress() { return this.emailAddress; }
-
-	public void setEmailAddress( String s ) { this.emailAddress = s; }
-
-	public boolean isActive() { return this.active; }
-
-	public int hashCode() { return getUsername().hashCode(); }
-
-	public boolean equals( Object obj )
-	{
-		if(! (obj instanceof Player) ) return false;
-
-		return ((Player) obj).getUsername().equals(getUsername());
-	}
-
-	/** @return	a String representation of the player. */
-	public String toString() { return getName(); }
-
-	/** Implements Comparable, so players can be sorted by name. */
-	public int compareTo( Player p )
-	{
-		return getName().compareTo(p.getName());
-	}
-
-}	// End of Player
+	@Column(name = "active")
+	public boolean isActive() { return super.isActive(); }
+}

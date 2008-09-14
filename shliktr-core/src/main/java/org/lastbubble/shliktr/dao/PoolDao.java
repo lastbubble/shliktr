@@ -1,5 +1,7 @@
 package org.lastbubble.shliktr.dao;
 
+import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.model.Picks;
 import org.lastbubble.shliktr.model.PickStats;
 import org.lastbubble.shliktr.model.Player;
@@ -22,15 +24,17 @@ public interface PoolDao
 
 	List<Player> findAllPlayers();
 
-	Set<Player> findPlayersForWeek( Week week );
+	Set<Player> findPlayersForWeek( IWeek week );
 
 	Player findPlayerById( Integer id );
 
 	Player findPlayerByName( String name );
 
-	List<Picks> findPicksForWeek( Week week );
+	Player findPlayerByUsername( String username );
 
-	Picks findPicksForPlayer( Week week, Player player );
+	List<Picks> findPicksForWeek( IWeek week );
+
+	Picks findPicksForPlayer( IWeek week, IPlayer player );
 
 	List<PickStats> findPickStatsForWeek( Week week );
 

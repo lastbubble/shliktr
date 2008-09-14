@@ -4,6 +4,8 @@ import org.lastbubble.shliktr.model.Game;
 import org.lastbubble.shliktr.model.Pick;
 import org.lastbubble.shliktr.model.Week;
 
+import java.util.List;
+
 /**
  * @version $Id$
  */
@@ -23,11 +25,13 @@ public class NewPicksForm
 	{
 		this.weekId = week.getId().intValue();
 
-		int gameCnt = week.getGameCount();
+		List<Game> games = week.getGames();
+
+		int gameCnt = games.size();
 		this.picks = new Pick[gameCnt];
 		for( int i = 0; i < gameCnt; i++ )
 		{
-			this.picks[i] = new Pick(week.getGameAt(i));
+			this.picks[i] = new Pick(games.get(i));
 		}
 	}
 

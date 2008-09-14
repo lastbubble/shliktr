@@ -140,12 +140,13 @@ implements View, ActionListener, ChangeListener, DocumentListener
 	{
 		this.gamesPanel.removeAll();
 
-		int gameCnt = this.week.getGameCount();
+		List<Game> games = this.week.getGames();
+
+		int gameCnt = games.size();
 
 		for( int i = 0; i < this.gameUIs.length; i++ )
 		{
-			this.gameUIs[i].setGame(
-				(i < gameCnt) ? this.week.getGameAt(i) : null);
+			this.gameUIs[i].setGame((i < gameCnt) ? games.get(i) : null);
 		}
 
 		this.gamesPanel.add( new JLabel("AWAY"));
@@ -520,7 +521,7 @@ implements View, ActionListener, ChangeListener, DocumentListener
 		buf.append("Week ");
 		buf.append(weekId);
 		buf.append(" picks are due by midnight (Pacific time) ");
-		Date weekStart = this.week.getStart();
+		Date weekStart = null;//this.week.getStart();
 		if( weekStart != null )
 		{
 			Date before = new Date(weekStart.getTime() - 12 * 60 * 60);

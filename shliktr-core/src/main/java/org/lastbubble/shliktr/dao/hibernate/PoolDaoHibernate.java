@@ -1,5 +1,7 @@
 package org.lastbubble.shliktr.dao.hibernate;
 
+import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.dao.PoolDao;
 import org.lastbubble.shliktr.model.Game;
 import org.lastbubble.shliktr.model.Pick;
@@ -99,7 +101,7 @@ public final class PoolDaoHibernate implements PoolDao
 		return crit.list();
 	}
 
-	public Set<Player> findPlayersForWeek( Week week )
+	public Set<Player> findPlayersForWeek( IWeek week )
 	{
 		Set<Player> players = new HashSet<Player>();
 
@@ -125,7 +127,15 @@ public final class PoolDaoHibernate implements PoolDao
 		return (Player) crit.uniqueResult();
 	}
 
-	public List<Picks> findPicksForWeek( Week week )
+	public Player findPlayerByUsername( String username )
+	{
+		return (Player) getSession()
+			.createCriteria(Player.class)
+			.add(Restrictions.eq("username", username))
+			.uniqueResult();
+	}
+
+	public List<Picks> findPicksForWeek( IWeek week )
 	{
 		Criteria crit = getSession().createCriteria(Picks.class);
 
@@ -134,14 +144,15 @@ public final class PoolDaoHibernate implements PoolDao
 		return crit.list();
 	}
 
-	public Picks findPicksForPlayer( Week week, Player player )
+	public Picks findPicksForPlayer( IWeek week, IPlayer player )
 	{
-		Criteria crit = getSession().createCriteria(Picks.class);
-
-		crit.add(Restrictions.eq("week", week));
-		crit.add(Restrictions.eq("player", player));
-
-		return (Picks) crit.uniqueResult();
+		return (Picks) getSession()
+			.createCriteria(Picks.class)
+			.createAlias("week", "week")
+			.createAlias("player", "player")
+			.add(Restrictions.eq("week.id", week.getWeekNumber()))
+			.add(Restrictions.eq("player.username", player.getUsername()))
+			.uniqueResult();
 	}
 
 	public List<PickStats> findPickStatsForWeek( Week week )

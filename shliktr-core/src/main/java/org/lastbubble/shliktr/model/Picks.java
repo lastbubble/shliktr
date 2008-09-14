@@ -1,5 +1,8 @@
 package org.lastbubble.shliktr.model;
 
+import org.lastbubble.shliktr.IPick;
+import org.lastbubble.shliktr.IPoolEntry;
+
 import java.util.*;
 
 import javax.persistence.CascadeType;
@@ -21,7 +24,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "picks")
-public class Picks implements Comparable<Picks>
+public class Picks implements IPoolEntry, Comparable<Picks>
 {
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
@@ -65,14 +68,16 @@ public class Picks implements Comparable<Picks>
 		picks.setWeek(week);
 		picks.setPlayer(player);
 
-		int cnt = week.getGameCount();
+		List<Game> games = week.getGames();
+
+		int cnt = games.size();
 
 		List<Pick> pickList = new ArrayList<Pick>(cnt);
 
 		for( int i = 0; i < cnt; i++ )
 		{
 			Pick pick = new Pick();
-			pick.setGame(week.getGameAt(i));
+			pick.setGame(games.get(i));
 			pickList.add(pick);
 		}
 
@@ -98,7 +103,7 @@ public class Picks implements Comparable<Picks>
 
 	void setPlayer( Player p ) { this.player = p; }
 
-	public List<Pick> getPicks()
+	public List<? extends Pick> getPicks()
 	{
 		return Collections.unmodifiableList(this.picks);
 	}
@@ -120,7 +125,7 @@ public class Picks implements Comparable<Picks>
 	{
 		int cnt = size();
 
-		if( cnt != getWeek().getGameCount() )
+		if( cnt != getWeek().getGames().size() )
 		{
 			String s = getPlayer()+" has wrong number of picks";
 			System.err.println(s);

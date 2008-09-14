@@ -1,5 +1,8 @@
 package org.lastbubble.shliktr.model;
 
+import org.lastbubble.shliktr.IGame;
+import static org.lastbubble.shliktr.ShliktrUtils.*;
+
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -20,10 +23,40 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(name = "game")
-public class Game
+public final class Game implements IGame
 {
+	private Integer id;
+
+	private Week week;
+
+	private Team homeTeam;
+
+	private Team awayTeam;
+
+	private int homeScore;
+
+	private int awayScore;
+
+	private Date playedOn;
+
+	private boolean complete;
+
+
+	//-------------------------------------------------------------------------
+	// Constructor
+	//-------------------------------------------------------------------------
+
+	/* TODO: make this package-private */
+	public Game() { }
+
+
+	//-------------------------------------------------------------------------
+	// Properties
+	//-------------------------------------------------------------------------
+
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
-	private int id;
+	public Integer getId() { return this.id; }
+	void setId( Integer n ) { this.id = n; }
 
 	@ManyToOne
 	@JoinColumn(
@@ -32,72 +65,51 @@ public class Game
 		insertable = false,
 		updatable = false
 	)
-	private Week week;
+	Week getWeek() { return this.week = week; }
+	void setWeek( Week week ) { this.week = week; }
 
+	/** @see	IGame#getHomeTeam */
 	@ManyToOne
 	@JoinColumn(name = "home_team_id", nullable = false)
-	private Team homeTeam;
-
-	@ManyToOne
-	@JoinColumn(name = "away_team_id", nullable = false)
-	private Team awayTeam;
-
-	@Column(name = "home_score")
-	private int homeScore;
-
-	@Column(name = "away_score")
-	private int awayScore;
-
-	@Column(name="played_on", nullable = false)
-	private Date playedOn;
-
-	@Transient
-	private boolean complete;
-
-
-	//-------------------------------------------------------------------------
-	// Constructor
-	//-------------------------------------------------------------------------
-
-	public Game() { }
-
-
-	//-------------------------------------------------------------------------
-	// Methods
-	//-------------------------------------------------------------------------
-
-	public Integer getId() { return this.id; }
-
-	void setId( Integer n ) { this.id = n; }
-
 	public Team getHomeTeam() { return this.homeTeam; }
-
 	void setHomeTeam( Team t ) { this.homeTeam = t; }
 
+	/** @see	IGame#getAwayTeam */
+	@ManyToOne
+	@JoinColumn(name = "away_team_id", nullable = false)
 	public Team getAwayTeam() { return this.awayTeam; }
-
 	void setAwayTeam( Team t ) { this.awayTeam = t; }
 
-	public Date getPlayedOn() { return this.playedOn; }
-
-	void setPlayedOn( Date d ) { this.playedOn = d; }
-
+	/** @see	IGame#getHomeScore */
+	@Column(name = "home_score")
 	public int getHomeScore() { return this.homeScore; }
 
+	/** @see	IGame#setHomeScore */
 	public void setHomeScore( int n ) { this.homeScore = n; }
 
+	/** @see	IGame#getAwayScore */
+	@Column(name = "away_score")
 	public int getAwayScore() { return this.awayScore; }
 
+	/** @see	IGame#setAwayScore */
 	public void setAwayScore( int n ) { this.awayScore = n; }
 
-	/**
-	 * @return	whether the game's outcome has been decided and exists in the
-	 *			database.
-	 */
-	public boolean isComplete() { return this.complete; }
+	/** @see	IGame#getPlayedOn */
+	@Column(name="played_on", nullable = false)
+	public Date getPlayedOn() { return this.playedOn; }
+	void setPlayedOn( Date d ) { this.playedOn = d; }
 
+	/** @see	IGame#isComplete */
+	@Transient
+	public boolean isComplete() { return this.complete; }
 	void setComplete( boolean b ) { this.complete = b; }
 
+
+	//---------------------------------------------------------------------------
+	// Derived properties
+	//---------------------------------------------------------------------------
+
+	@Transient
 	public Winner getWinner()
 	{
 		int homeScore = getHomeScore();
@@ -115,35 +127,49 @@ public class Game
 		return null;
 	}
 
-	public int hashCode()
-	{
-		return getHomeTeam().hashCode() ^ getAwayTeam().hashCode();
-	}
+
+	//---------------------------------------------------------------------------
+	// Methods
+	//---------------------------------------------------------------------------
 
 	public boolean equals( Object obj )
 	{
-		if(! (obj instanceof Game) ) return false;
+		if( obj == this ) return true;
 
-		Game g = (Game) obj;
-		return (getHomeTeam().equals(g.getHomeTeam()) &&
-				getAwayTeam().equals(g.getAwayTeam()) &&
-				getPlayedOn().equals(g.getPlayedOn()));
+		if( obj instanceof IGame )
+		{
+			IGame game = (IGame) obj;
+			return nullSafeEquals(this.homeTeam, game.getHomeTeam())
+				&& nullSafeEquals(this.awayTeam, game.getAwayTeam());
+		}
+
+		return false;
+	}
+
+	public int hashCode()
+	{
+		int hashCode = 0;
+
+		if( this.homeTeam != null )
+			hashCode += this.homeTeam.hashCode();
+
+		if( this.awayTeam != null )
+			hashCode += 17 * this.awayTeam.hashCode();
+
+		return hashCode;
 	}
 
 	public String toString()
 	{
-		StringBuffer buf = new StringBuffer();
-
-		buf.append(getAwayTeam());
-		buf.append(" at ");
-		buf.append(getHomeTeam());
-		buf.append(" (");
-		buf.append(getAwayScore());
-		buf.append("-");
-		buf.append(getHomeScore());
-		buf.append(")");
-
-		return buf.toString();
+		return new StringBuilder()
+			.append(getAwayTeam())
+			.append(" at ")
+			.append(getHomeTeam())
+			.append(" (")
+			.append(getAwayScore())
+			.append('-')
+			.append(getHomeScore())
+			.append(')')
+			.toString();
 	}
-
-}	// End of Game
+}
