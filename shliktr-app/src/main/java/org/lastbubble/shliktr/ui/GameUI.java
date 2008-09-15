@@ -1,8 +1,9 @@
 package org.lastbubble.shliktr.ui;
 
-import org.lastbubble.shliktr.model.Game;
-import org.lastbubble.shliktr.model.Team;
-import org.lastbubble.shliktr.model.Winner;
+import org.lastbubble.shliktr.IGame;
+import org.lastbubble.shliktr.ITeam;
+import org.lastbubble.shliktr.Winner;
+import static org.lastbubble.shliktr.Winner.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -14,7 +15,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.EventListenerList;
 
 /**
- * A UI for viewing a <code>Game</code> and setting the score of the game.
+ * A UI for viewing an <code>IGame</code> and setting the score of the game.
  *
  * @see	Game
  *
@@ -22,8 +23,8 @@ import javax.swing.event.EventListenerList;
  */
 public class GameUI implements DocumentListener
 {
-	/** The <code>Game</code> used as the UI's model. Can be null. */
-	private Game m_game;
+	/** The <code>IGame</code> used as the UI's model. Can be null. */
+	private IGame m_game;
 
 	/** The UI for the away team and score. */
 	private ScoreUI m_awayUI;
@@ -42,9 +43,9 @@ public class GameUI implements DocumentListener
 	 */
 	public GameUI()
 	{
-		m_awayUI = new ScoreUI(Winner.AWAY);
+		m_awayUI = new ScoreUI(AWAY);
 		m_awayUI.setDocumentListener(this);
-		m_homeUI = new ScoreUI(Winner.HOME);
+		m_homeUI = new ScoreUI(HOME);
 		m_homeUI.setDocumentListener(this);
 	}
 
@@ -59,11 +60,11 @@ public class GameUI implements DocumentListener
 	/** @return	the component used to choose the home team. */
 	public Component getHomeChooser() { return m_homeUI; }
 
-	/** @return	the <code>Game</code> tracked by the UI. Can be null. */
-	public Game getGame() { return m_game; }
+	/** @return	the <code>IGame</code> tracked by the UI. Can be null. */
+	public IGame getGame() { return m_game; }
 
-	/** Sets the <code>Game</code> tracked by the UI. */
-	public void setGame( Game game )
+	/** Sets the <code>IGame</code> tracked by the UI. */
+	public void setGame( IGame game )
 	{
 		m_game = game;
 
@@ -92,7 +93,7 @@ public class GameUI implements DocumentListener
 
 	private void documentChanged()
 	{
-		Game game = getGame();
+		IGame game = getGame();
 
 		if( game != null )
 		{
@@ -148,7 +149,7 @@ public class GameUI implements DocumentListener
 		private JTextField im_field;
 
 		private Winner im_winner;
-		private Game im_game;
+		private IGame im_game;
 
 		private DocumentListener im_listener;
 
@@ -172,19 +173,19 @@ public class GameUI implements DocumentListener
 			im_listener = l;
 		}
 
-		private void setGame( Game game )
+		private void setGame( IGame game )
 		{
 			im_game = game;
 
 			if( im_game != null )
 			{
-				Team team = (im_winner == Winner.AWAY) ?
+				ITeam team = (im_winner == AWAY) ?
 					im_game.getAwayTeam() : im_game.getHomeTeam();
 
 				im_label.setText(team.getLocation());
 				im_label.setIcon(TeamUI.getTeamIcon(team));
 
-				int score = (im_winner == Winner.AWAY) ?
+				int score = (im_winner == AWAY) ?
 					im_game.getAwayScore() : im_game.getHomeScore();
 
 				im_field.getDocument().removeDocumentListener(im_listener);
@@ -217,7 +218,5 @@ public class GameUI implements DocumentListener
 				(im_game != null && im_game.getWinner() == im_winner) ?
 					Color.green : null);
 		}
-
-	}	// End of ScoreUI
-
-}	// End of GameUI
+	}
+}

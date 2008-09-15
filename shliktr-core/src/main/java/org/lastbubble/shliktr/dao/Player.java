@@ -1,4 +1,4 @@
-package org.lastbubble.shliktr.model;
+package org.lastbubble.shliktr.dao;
 
 import org.lastbubble.shliktr.impl.PlayerImpl;
 
@@ -22,16 +22,13 @@ import javax.persistence.Table;
 @Table(name = "player")
 public final class Player extends PlayerImpl implements Serializable
 {
-	private Integer id;
-
-
 	//-------------------------------------------------------------------------
 	// Constructor
 	//-------------------------------------------------------------------------
 
 	Player() { super(); }
 
-	public Player( String username ) { super(username); }
+	Player( String username ) { super(username); }
 
 
 	//-------------------------------------------------------------------------
@@ -39,8 +36,7 @@ public final class Player extends PlayerImpl implements Serializable
 	//-------------------------------------------------------------------------
 
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
-	public Integer getId() { return this.id; }
-	void setId( Integer id ) { this.id = id; }
+	public Integer getId() { return super.getId(); }
 
 	@Column(length = 16, nullable = false, unique = true)
 	public String getUsername() { return super.getUsername(); }

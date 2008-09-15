@@ -5,6 +5,8 @@ package org.lastbubble.shliktr;
  */
 public interface IPlayer
 {
+	Integer getId();
+
 	String getUsername();
 
 	String getName();

@@ -22,4 +22,6 @@ public interface IGame
 	Date getPlayedOn();
 
 	boolean isComplete();
+
+	Winner getWinner();
 }

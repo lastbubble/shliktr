@@ -1,8 +1,5 @@
 package org.lastbubble.shliktr.dao;
 
-import org.lastbubble.shliktr.model.Game;
-import org.lastbubble.shliktr.model.Week;
-
 import java.util.List;
 
 /**

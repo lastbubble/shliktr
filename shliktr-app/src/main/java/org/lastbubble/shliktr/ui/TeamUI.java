@@ -1,6 +1,6 @@
 package org.lastbubble.shliktr.ui;
 
-import org.lastbubble.shliktr.model.Team;
+import org.lastbubble.shliktr.ITeam;
 
 import java.awt.*;
 import java.net.*;
@@ -29,7 +29,7 @@ public final class TeamUI
 	// Utility methods
 	//-------------------------------------------------------------------------
 
-	synchronized static Icon getTeamIcon( Team team )
+	synchronized static Icon getTeamIcon( ITeam team )
 	{
 		String abbr = (team != null) ? team.getAbbr() : null;
 
@@ -64,5 +64,4 @@ public final class TeamUI
 
 		return icon;
 	}
-
-}	// End of TeamUI
+}

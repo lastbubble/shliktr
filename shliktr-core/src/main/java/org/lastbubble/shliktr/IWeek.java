@@ -11,6 +11,8 @@ public interface IWeek
 
 	List<? extends IGame> getGames();
 
+	String getTiebreaker();
+
 	void setTiebreaker( String s );
 
 	int getTiebreakerAnswer();

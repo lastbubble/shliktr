@@ -1,4 +1,4 @@
-package org.lastbubble.shliktr.model;
+package org.lastbubble.shliktr.dao;
 
 import org.lastbubble.shliktr.IWeek;
 
@@ -33,8 +33,7 @@ public final class Week implements IWeek
 	// Constructor
 	//-------------------------------------------------------------------------
 
-	/* TODO: make this package-private */
-	public Week() { }
+	Week() { }
 
 
 	//-------------------------------------------------------------------------

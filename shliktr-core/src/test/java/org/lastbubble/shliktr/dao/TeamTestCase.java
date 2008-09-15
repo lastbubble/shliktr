@@ -1,7 +1,6 @@
-package org.lastbubble.shliktr.model;
+package org.lastbubble.shliktr.dao;
 
 import org.lastbubble.shliktr.impl.TeamImpl;
-
 import org.lastbubble.shliktr.impl.TeamImplTestCase;
 
 /**

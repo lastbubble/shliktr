@@ -1,7 +1,7 @@
 package org.lastbubble.shliktr.ui;
 
-import org.lastbubble.shliktr.model.Picks;
-import org.lastbubble.shliktr.model.Week;
+import org.lastbubble.shliktr.IPoolEntry;
+import org.lastbubble.shliktr.IWeek;
 
 import java.awt.Component;
 
@@ -14,10 +14,10 @@ public interface View
 
 	Component render();
 
-	void setModel( Week week, Picks picks );
+	void setModel( IWeek week, IPoolEntry entry );
 
 	void save();
 
 	boolean exit();
 
-}	// End of View
+}

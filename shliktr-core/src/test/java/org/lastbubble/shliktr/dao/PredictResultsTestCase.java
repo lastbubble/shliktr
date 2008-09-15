@@ -1,7 +1,10 @@
 package org.lastbubble.shliktr.dao;
 
-import org.lastbubble.shliktr.model.*;
-import static org.lastbubble.shliktr.model.Winner.*;
+import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.PlayerPrediction;
+import org.lastbubble.shliktr.Winner;
+import static org.lastbubble.shliktr.Winner.*;
+import static org.lastbubble.shliktr.dao.TestHelper.*;
 
 import java.util.*;
 
@@ -12,7 +15,6 @@ import static org.easymock.EasyMock.*;
  */
 public class PredictResultsTestCase extends PoolServiceTestCase
 {
-	/*
 	private static Game game1 = new Game();
 	private static Game game2 = new Game();
 
@@ -20,43 +22,42 @@ public class PredictResultsTestCase extends PoolServiceTestCase
 	private static Player player2 = new Player("player2");
 	private static Player player3 = new Player("player3");
 
-	private static Week week = new Week(1, Arrays.asList(game1, game2));
+	private static Week week = newWeek(1, Arrays.asList(game1, game2));
 
-	private static Picks picks1 = new Picks(week, player1, Arrays.asList(
-			new Pick(game1, HOME, 2), new Pick(game2, AWAY, 1)
+	private static PoolEntry entry1 = newEntry(week, player1, Arrays.asList(
+			newPick(game1, HOME, 2), newPick(game2, AWAY, 1)
 		)
 	);
 
-	private static Picks picks2 = new Picks(week, player2, Arrays.asList(
-			new Pick(game1, AWAY, 1), new Pick(game2, HOME, 2)
+	private static PoolEntry entry2 = newEntry(week, player2, Arrays.asList(
+			newPick(game1, AWAY, 1), newPick(game2, HOME, 2)
 		)
 	);
 
-	private static Picks picks3 = new Picks(week, player3, Arrays.asList(
-			new Pick(game1, HOME, 1), new Pick(game2, HOME, 1)
+	private static PoolEntry entry3 = newEntry(week, player3, Arrays.asList(
+			newPick(game1, HOME, 1), newPick(game2, HOME, 1)
 		)
 	);
 
-	private static List<Picks> picksForWeek =
-		Arrays.asList(picks1, picks2, picks3);
+	private static List<PoolEntry> entriesForWeek =
+		Arrays.asList(entry1, entry2, entry3);
 
-	private Map<Player, PlayerPrediction> predictions;
-	*/
+	private Map<? extends IPlayer, PlayerPrediction> predictions;
+
 
 	//---------------------------------------------------------------------------
 	// PoolServiceTestCase methods
 	//---------------------------------------------------------------------------
 
-	/*
 	@Override
 	protected void onSetUp()
 	{
 		expect(poolDao.findWeekById(week.getId())).andReturn(week).anyTimes();
-		expect(poolDao.findPicksForWeek(week)).andReturn(picksForWeek).anyTimes();
+		expect(poolDao.findEntriesForWeek(week)).andReturn(entriesForWeek)
+			.anyTimes();
 		poolDao.refreshGamesForWeek(week);
 		replay(poolDao);
 	}
-	*/
 
 	//---------------------------------------------------------------------------
 	// Tests
@@ -64,7 +65,6 @@ public class PredictResultsTestCase extends PoolServiceTestCase
 
 	public void testSomething() { }
 
-	/*
 	public void testPredictResults_nullWeek()
 	{
 		predictions = poolService.predictResults(null, Collections.EMPTY_LIST);
@@ -112,7 +112,7 @@ public class PredictResultsTestCase extends PoolServiceTestCase
 		verify(poolDao);
 	}
 
-	protected Map<Player, PlayerPrediction> predictResults(
+	protected Map<? extends IPlayer, PlayerPrediction> predictResults(
 		List<Winner> winners )
 	{
 		predictions = poolService.predictResults(week, winners);
@@ -131,5 +131,4 @@ public class PredictResultsTestCase extends PoolServiceTestCase
 			assertSame(expectedMustWins[i], mustWins[i]);
 		}
 	}
-	*/
 }

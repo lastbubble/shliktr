@@ -39,16 +39,15 @@ public class PicksCriteria
 
 	public String toString()
 	{
-		StringBuffer buf = new StringBuffer();
-		buf.append(getClass().getName());
-		buf.append("[");
-		buf.append("weekId=");
-		buf.append(getWeekId());
-		buf.append(",");
-		buf.append("playerId=");
-		buf.append(getPlayerId());
-		buf.append("]");
-		return buf.toString();
+		return new StringBuilder()
+			.append(getClass().getName())
+			.append("[")
+			.append("weekId=")
+			.append(getWeekId())
+			.append(",")
+			.append("playerId=")
+			.append(getPlayerId())
+			.append("]")
+			.toString();
 	}
-
-}	// End of PicksCriteria
+}

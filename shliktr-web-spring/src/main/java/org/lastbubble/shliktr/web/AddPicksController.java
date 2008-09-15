@@ -1,11 +1,10 @@
 package org.lastbubble.shliktr.web;
 
 import org.lastbubble.shliktr.IPick;
+import org.lastbubble.shliktr.IPlayer;
 import org.lastbubble.shliktr.IPoolEntry;
-import org.lastbubble.shliktr.model.Pick;
-import org.lastbubble.shliktr.model.Player;
-import org.lastbubble.shliktr.model.Week;
-import org.lastbubble.shliktr.model.Winner;
+import org.lastbubble.shliktr.IWeek;
+import org.lastbubble.shliktr.Winner;
 import org.lastbubble.shliktr.service.PoolService;
 
 import java.util.*;
@@ -35,7 +34,6 @@ public class AddPicksController extends SimpleFormController
 		setFormView("addPicks");
 		setSuccessView("redirect:/app/viewPicks");
 	}
-
 
 
 	//-------------------------------------------------------------------------
@@ -69,13 +67,14 @@ public class AddPicksController extends SimpleFormController
 			catch( NumberFormatException e ) { }
 		}
 
-		Week week = this.poolService.findWeekById(weekId);
+		IWeek week = this.poolService.findWeekById(weekId);
 
-		List<Player> allPlayers = this.poolService.findAllPlayers();
-		Set<Player> weekPlayers = this.poolService.findPlayersForWeek(week);
+		List<? extends IPlayer> allPlayers = this.poolService.findAllPlayers();
+		Set<? extends IPlayer> weekPlayers = this.poolService
+			.findPlayersForWeek(week);
 
-		List<Player> players = new ArrayList<Player>(allPlayers.size());
-		for( Player player : allPlayers )
+		List<IPlayer> players = new ArrayList<IPlayer>(allPlayers.size());
+		for( IPlayer player : allPlayers )
 		{
 			if( weekPlayers.contains(player) == false )
 			{
@@ -105,7 +104,7 @@ public class AddPicksController extends SimpleFormController
 			catch( NumberFormatException e ) { }
 		}
 
-		Week week = this.poolService.findWeekById(weekId);
+		IWeek week = this.poolService.findWeekById(weekId);
 
 		if( week == null )
 		{
@@ -121,20 +120,20 @@ public class AddPicksController extends SimpleFormController
 		NewPicksForm picksForm = (NewPicksForm) command;
 
 		int weekId = picksForm.getWeekId();
-		Week week = this.poolService.findWeekById(weekId);
+		IWeek week = this.poolService.findWeekById(weekId);
 
 		int playerId = picksForm.getPlayerId();
-		Player player = this.poolService.findPlayerById(playerId);
+		IPlayer player = this.poolService.findPlayerById(playerId);
 
 		if( this.poolService.acceptPicksForWeek(weekId) == false )
 		{
 			ModelAndView mv = new ModelAndView("viewPicks");
-			mv.addObject("weekId", week.getId());
+			mv.addObject("weekId", week.getWeekNumber());
 			mv.addObject("playerId", player.getId());
 			return mv;
 		}
 
-		Pick[] newPicks = picksForm.getPicks();
+		IPick[] newPicks = picksForm.getPicks();
 
 		IPoolEntry entry = this.poolService.findEntry(week, player, true);
 
@@ -156,10 +155,9 @@ public class AddPicksController extends SimpleFormController
 		this.poolService.saveEntry(entry);
 
 		ModelAndView mv = new ModelAndView(getSuccessView());
-		mv.addObject("weekId", week.getId());
+		mv.addObject("weekId", week.getWeekNumber());
 		mv.addObject("playerId", player.getId());
 
 		return mv;
 	}
-
-}	// End of AddPicksController
+}

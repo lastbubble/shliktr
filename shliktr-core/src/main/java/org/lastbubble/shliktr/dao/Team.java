@@ -1,4 +1,4 @@
-package org.lastbubble.shliktr.model;
+package org.lastbubble.shliktr.dao;
 
 import org.lastbubble.shliktr.impl.TeamImpl;
 
@@ -27,7 +27,7 @@ public final class Team extends TeamImpl
 
 	Team() { super(); }
 
-	public Team( String abbr ) { super(abbr); }
+	Team( String abbr ) { super(abbr); }
 
 
 	//-------------------------------------------------------------------------

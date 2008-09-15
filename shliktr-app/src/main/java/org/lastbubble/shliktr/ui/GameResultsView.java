@@ -1,13 +1,14 @@
 package org.lastbubble.shliktr.ui;
 
-import org.lastbubble.shliktr.model.Game;
-import org.lastbubble.shliktr.model.Picks;
-import org.lastbubble.shliktr.model.Player;
-import org.lastbubble.shliktr.model.PlayerScore;
-import org.lastbubble.shliktr.model.StringUtils;
-import org.lastbubble.shliktr.model.Team;
-import org.lastbubble.shliktr.model.Week;
-import org.lastbubble.shliktr.model.Winner;
+import org.lastbubble.shliktr.IGame;
+import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IPoolEntry;
+import org.lastbubble.shliktr.ITeam;
+import org.lastbubble.shliktr.IWeek;
+import org.lastbubble.shliktr.PlayerPrediction;
+import org.lastbubble.shliktr.PlayerScore;
+import org.lastbubble.shliktr.StringUtils;
+import org.lastbubble.shliktr.Winner;
 import org.lastbubble.shliktr.service.PoolService;
 
 import java.awt.BorderLayout;
@@ -48,7 +49,7 @@ implements View, ActionListener, ChangeListener, DocumentListener
 
 	// model
 
-	private Week week;
+	private IWeek week;
 	/** whether the view has changed the data */
 	private boolean dataChanged;
 
@@ -122,7 +123,7 @@ implements View, ActionListener, ChangeListener, DocumentListener
 	// Model
 	//-------------------------------------------------------------------------
 
-	public void setWeek( Week week )
+	public void setWeek( IWeek week )
 	{
 		this.week = week;
 
@@ -140,7 +141,7 @@ implements View, ActionListener, ChangeListener, DocumentListener
 	{
 		this.gamesPanel.removeAll();
 
-		List<Game> games = this.week.getGames();
+		List<? extends IGame> games = this.week.getGames();
 
 		int gameCnt = games.size();
 
@@ -185,7 +186,7 @@ implements View, ActionListener, ChangeListener, DocumentListener
 
 	public Component render() { return this; }
 
-	public void setModel( Week week, Picks picks )
+	public void setModel( IWeek week, IPoolEntry entry )
 	{
 		setWeek(week);
 	}
@@ -198,7 +199,7 @@ implements View, ActionListener, ChangeListener, DocumentListener
 		try { this.week.setTiebreakerAnswer(Integer.parseInt(s)); }
 		catch( NumberFormatException e ) {}
 
-		this.poolService.makePersistentWeek(this.week);
+		this.poolService.saveWeek(this.week);
 
 		this.dataChanged = false;
 	}
@@ -251,13 +252,14 @@ implements View, ActionListener, ChangeListener, DocumentListener
 				games.add(this.gameUIs[i].getGame());
 		}
 
-		List<Picks> picksList = this.poolService.findPicksForWeek(this.week);
+		List<? extends IPoolEntry> entries = this.poolService
+			.findEntriesForWeek(this.week);
 
-		List results = new ArrayList(picksList.size());
+		List<PlayerScore> results = new ArrayList<PlayerScore>(entries.size());
 
-		for( Picks picks : picksList )
+		for( IPoolEntry entry : entries )
 		{
-			results.add( new PlayerScore(picks));
+			results.add( new PlayerScore(entry));
 		}
 
 		Collections.sort(results);
@@ -277,9 +279,8 @@ implements View, ActionListener, ChangeListener, DocumentListener
 		buf.append(StringUtils.pad("TIE", 3, true));
 		buf.append('\n');
 
-		for( Iterator i = results.iterator(); i.hasNext(); )
+		for( PlayerScore result : results )
 		{
-			PlayerScore result = (PlayerScore) i.next();
 			buf.append(
 				StringUtils.pad(result.getPlayer().getName(), 12, false));
 			buf.append(' ');
@@ -295,7 +296,7 @@ implements View, ActionListener, ChangeListener, DocumentListener
 			buf.append('\n');
 		}
 
-		float total = picksList.size() * 5.00F;
+		float total = entries.size() * 5.00F;
 		buf.append('\n');
 		buf.append("First place: $");
 		buf.append(total * 0.7F);
@@ -316,7 +317,7 @@ implements View, ActionListener, ChangeListener, DocumentListener
 
 		Frame parent = (Frame) SwingUtilities.getWindowAncestor(this);
 		JDialog dlg = new JDialog(parent,
-			"Results for week "+this.week.getId(), true);
+			"Results for week "+this.week.getWeekNumber(), true);
 		dlg.getContentPane().add(scroll);
 		dlg.pack();
 		dlg.show();
@@ -324,14 +325,13 @@ implements View, ActionListener, ChangeListener, DocumentListener
 
 	private void predictResults()
 	{
-		/*
-		List<Winner> winners = new ArrayList<Winner>(games.size());
+		List<Winner> winners = new ArrayList<Winner>(this.week.getGames().size());
 
 		int unfinishedCnt = 0;
 
 		for( int i = 0; i < this.gameUIs.length; i++ )
 		{
-			Game game = this.gameUIs[i].getGame();
+			IGame game = this.gameUIs[i].getGame();
 			if( game == null ) continue;
 
 			Winner winner = game.getWinner();
@@ -344,10 +344,10 @@ implements View, ActionListener, ChangeListener, DocumentListener
 		System.out.println(">> predicting results for final "+unfinishedCnt+
 			" games");
 
-		Map<Player, PlayerPrediction> m = this.poolService
+		Map<? extends IPlayer, PlayerPrediction> m = this.poolService
 			.predictResults(this.week, winners);
 
-		List predictions = new ArrayList();
+		List<PlayerPrediction> predictions = new ArrayList<PlayerPrediction>();
 		predictions.addAll(m.values());
 		Collections.sort(predictions);
 
@@ -360,9 +360,8 @@ implements View, ActionListener, ChangeListener, DocumentListener
 		buf.append(StringUtils.pad("WINS", 5, true));
 		buf.append('\n');
 
-		for( Iterator i = predictions.iterator(); i.hasNext(); )
+		for( PlayerPrediction pp : predictions )
 		{
-			PlayerPrediction pp = (PlayerPrediction) i.next();
 			buf.append(StringUtils.pad(pp.getPlayer().getName(), 12, false));
 			buf.append(' ');
 			buf.append(StringUtils.pad(pp.getWinningOutcomes().size(), 5, true));
@@ -383,11 +382,18 @@ implements View, ActionListener, ChangeListener, DocumentListener
 						}
 
 						if( listed > 0 ) buf.append(',');
-
-						Game game = unfinishedGames[j];
-						Team team = (winner == Winner.HOME) ?
-							game.getHomeTeam() : game.getAwayTeam();
-						buf.append(team.getAbbr().toUpperCase());
+/*
+						IGame game = unfinishedGames[j];
+						switch( winner )
+						{
+							case HOME:
+								buf.append(game.getHomeTeam().getAbbr().toUpperCase());
+								break;
+							case AWAY:
+								buf.append(game.getAwayTeam().getAbbr().toUpperCase());
+								break;
+						}
+*/
 						listed++;
 					}
 				}
@@ -404,11 +410,13 @@ implements View, ActionListener, ChangeListener, DocumentListener
 					buf.append("                 ");
 					for( int k = 0; k < unfinishedCnt; k++ )
 					{
+/*
 						if( k > 0 ) buf.append(',');
-						Game game = unfinishedGames[k];
-						Team team = (outcome.charAt(k) == '1') ?
+						IGame game = unfinishedGames[k];
+						ITeam team = (outcome.charAt(k) == '1') ?
 							game.getHomeTeam() : game.getAwayTeam();
 						buf.append(team.getAbbr().toUpperCase());
+*/
 					}
 					if( outcome.endsWith("*") )
 						buf.append(" (tie)");
@@ -426,11 +434,10 @@ implements View, ActionListener, ChangeListener, DocumentListener
 
 		Frame parent = (Frame) SwingUtilities.getWindowAncestor(this);
 		JDialog dlg = new JDialog(parent,
-			"Predictions for week "+this.week.getId(), true);
+			"Predictions for week "+this.week.getWeekNumber(), true);
 		dlg.getContentPane().add(scroll);
 		dlg.pack();
 		dlg.show();
-		*/
 	}
 
 	private static class ResultComparator implements Comparator
@@ -447,7 +454,7 @@ implements View, ActionListener, ChangeListener, DocumentListener
 
 	private void showForm()
 	{
-		List games = new ArrayList();
+		List<IGame> games = new ArrayList<IGame>();
 		for( int i = 0; i < this.gameUIs.length; i++ )
 		{
 			if( this.gameUIs[i].getGame() != null )
@@ -456,17 +463,17 @@ implements View, ActionListener, ChangeListener, DocumentListener
 
 		StringBuffer buf = new StringBuffer();
 
-		Integer weekId = this.week.getId();
+		int weekNumber = this.week.getWeekNumber();
 
 		buf.append("WEEK ");
-		buf.append(weekId);
+		buf.append(weekNumber);
 		buf.append(" PICKS:\n");
 
-		if( weekId > 9 ) buf.append('=');
+		if( weekNumber > 9 ) buf.append('=');
 		buf.append("=============\n");
 
 		buf.append("Here's the form for Week ");
-		buf.append(weekId);
+		buf.append(weekNumber);
 		buf.append(" (note that there are ");
 		buf.append(games.size());
 		buf.append(" games this week):\n\n");
@@ -480,13 +487,10 @@ implements View, ActionListener, ChangeListener, DocumentListener
 
 		DateFormat dayOfWeekFmt = new SimpleDateFormat("EEEE");
 
-		Game game;
 		String dayOfWeek = null;
 
-		for( Iterator i = games.iterator(); i.hasNext(); )
+		for( IGame game : games )
 		{
-			game = (Game) i.next();
-
 			if( game.getPlayedOn() != null )
 			{
 				String s = dayOfWeekFmt.format(game.getPlayedOn());
@@ -519,7 +523,7 @@ implements View, ActionListener, ChangeListener, DocumentListener
 		buf.append(" _____\n");
 		buf.append('\n');
 		buf.append("Week ");
-		buf.append(weekId);
+		buf.append(weekNumber);
 		buf.append(" picks are due by midnight (Pacific time) ");
 		Date weekStart = null;//this.week.getStart();
 		if( weekStart != null )
@@ -538,7 +542,7 @@ implements View, ActionListener, ChangeListener, DocumentListener
 
 		Frame parent = (Frame) SwingUtilities.getWindowAncestor(this);
 		JDialog dlg = new JDialog(parent,
-			"Week "+this.week.getId()+" form", true);
+			"Week "+this.week.getWeekNumber()+" form", true);
 		dlg.getContentPane().add(scroll);
 		dlg.pack();
 		dlg.show();
@@ -564,5 +568,4 @@ implements View, ActionListener, ChangeListener, DocumentListener
 	{
 		this.dataChanged = true;
 	}
-
-}	// End of GameResultsView
+}

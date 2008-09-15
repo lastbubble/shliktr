@@ -7,6 +7,8 @@ import org.lastbubble.shliktr.IPlayer;
  */
 public class PlayerImpl implements IPlayer, Comparable<IPlayer>
 {
+	private Integer id;
+
 	private String username;
 
 	private String name;
@@ -33,6 +35,11 @@ public class PlayerImpl implements IPlayer, Comparable<IPlayer>
 	//-------------------------------------------------------------------------
 	// Implements IPlayer
 	//-------------------------------------------------------------------------
+
+	/** @see	IPlayer#getId */
+	public Integer getId() { return this.id; }
+
+	protected void setId( Integer n ) { this.id = n; }
 
 	/** @see	IPlayer#getUsername */
 	public String getUsername() { return this.username; }

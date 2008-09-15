@@ -1,6 +1,6 @@
 package org.lastbubble.shliktr.security;
 
-import org.lastbubble.shliktr.model.Player;
+import org.lastbubble.shliktr.IPlayer;
 import org.lastbubble.shliktr.web.WebUtils;
 
 import java.io.IOException;
@@ -34,10 +34,10 @@ public class PlayerAwareRequestFilter implements Filter
 		FilterChain filterChain )
 	throws IOException, ServletException
 	{
-		Authentication auth =
-			SecurityContextHolder.getContext().getAuthentication();
+		Authentication auth = SecurityContextHolder.getContext()
+			.getAuthentication();
 
-		Player player = null;
+		IPlayer player = null;
 
 		if( auth != null && auth.getPrincipal() instanceof PlayerUserDetails )
 		{
@@ -55,5 +55,4 @@ public class PlayerAwareRequestFilter implements Filter
 
 		filterChain.doFilter(request, response);
 	}
-
-}	// PlayerAwareRequestFilter
+}

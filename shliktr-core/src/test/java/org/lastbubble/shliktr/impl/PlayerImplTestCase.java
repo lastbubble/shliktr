@@ -74,6 +74,16 @@ public class PlayerImplTestCase extends TestCase
 		}
 	}
 
+	public void testSetId()
+	{
+		assertNull(player.getId());
+
+		Integer id = new Integer(23);
+		player.setId(id);
+
+		assertEquals(id, player.getId());
+	}
+
 	public void testSetUsername()
 	{
 		String username = "user";

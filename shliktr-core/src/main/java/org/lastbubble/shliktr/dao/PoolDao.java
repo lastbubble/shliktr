@@ -2,10 +2,7 @@ package org.lastbubble.shliktr.dao;
 
 import org.lastbubble.shliktr.IPlayer;
 import org.lastbubble.shliktr.IWeek;
-import org.lastbubble.shliktr.model.Picks;
-import org.lastbubble.shliktr.model.PickStats;
-import org.lastbubble.shliktr.model.Player;
-import org.lastbubble.shliktr.model.Week;
+import org.lastbubble.shliktr.PickStats;
 
 import java.util.Date;
 import java.util.List;
@@ -28,20 +25,17 @@ public interface PoolDao
 
 	Player findPlayerById( Integer id );
 
-	Player findPlayerByName( String name );
-
 	Player findPlayerByUsername( String username );
 
-	List<Picks> findPicksForWeek( IWeek week );
+	List<PoolEntry> findEntriesForWeek( IWeek week );
 
-	Picks findPicksForPlayer( IWeek week, IPlayer player );
+	PoolEntry findEntry( IWeek week, IPlayer player );
 
-	List<PickStats> findPickStatsForWeek( Week week );
+	List<PickStats> findPickStatsForWeek( IWeek week );
 
 	void refreshGamesForWeek( Week week );
 
-	void makePersistentWeek( Week week );
+	void persistWeek( Week week );
 
-	void makePersistentPicks( Picks picks );
-
-}	// End of PoolDao
+	void persistEntry( PoolEntry entry );
+}

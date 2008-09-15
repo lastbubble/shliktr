@@ -33,5 +33,4 @@ public class LoginController extends AbstractController
 
 		return mv;
 	}
-
-}	// End of LoginController
+}

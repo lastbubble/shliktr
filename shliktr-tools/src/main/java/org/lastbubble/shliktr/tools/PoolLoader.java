@@ -5,8 +5,8 @@ import org.lastbubble.shliktr.IPick;
 import org.lastbubble.shliktr.IPlayer;
 import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.IWeek;
+import static org.lastbubble.shliktr.Winner.*;
 import org.lastbubble.shliktr.impl.TeamImpl;
-import static org.lastbubble.shliktr.model.Winner.*;
 import org.lastbubble.shliktr.service.PoolService;
 
 import java.io.BufferedReader;
@@ -120,7 +120,7 @@ public class PoolLoader
 				game.setAwayScore(awayScore);
 		}
 
-		this.poolService.makePersistentWeek(week);
+		this.poolService.saveWeek(week);
 	}
 
 	protected void updateEntry( int weekNumber, String username,

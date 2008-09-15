@@ -1,15 +1,17 @@
-package org.lastbubble.shliktr.model;
+package org.lastbubble.shliktr;
 
 import java.util.*;
 
 import junit.framework.TestCase;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @version $Id$
  */
 public class PickStatsTestCase extends TestCase
 {
-	private static Team team = new Team();
+	private static ITeam team = createMock(ITeam.class);
 
 	private PickStats stats;
 
@@ -71,11 +73,11 @@ public class PickStatsTestCase extends TestCase
 
 	public void testGetRankings_compareRankingsCount()
 	{
-		PickStats stats1 = new PickStats( new Team());
+		PickStats stats1 = new PickStats(team);
 		stats1.addRanking(1);
 		stats1.addRanking(2);
 
-		PickStats stats2 = new PickStats( new Team());
+		PickStats stats2 = new PickStats(team);
 		stats2.addRanking(16);
 
 		assertTrue(stats1.compareTo(stats2) < 0);
@@ -83,10 +85,10 @@ public class PickStatsTestCase extends TestCase
 
 	public void testGetRankings_compareTotal()
 	{
-		PickStats stats1 = new PickStats( new Team());
+		PickStats stats1 = new PickStats(team);
 		stats1.addRanking(1);
 
-		PickStats stats2 = new PickStats( new Team());
+		PickStats stats2 = new PickStats(team);
 		stats2.addRanking(16);
 
 		assertTrue(stats1.compareTo(stats2) > 0);

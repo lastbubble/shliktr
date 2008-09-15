@@ -1,8 +1,9 @@
 package org.lastbubble.shliktr.web;
 
-import org.lastbubble.shliktr.model.Game;
-import org.lastbubble.shliktr.model.Pick;
-import org.lastbubble.shliktr.model.Week;
+import org.lastbubble.shliktr.IGame;
+import org.lastbubble.shliktr.IPick;
+import org.lastbubble.shliktr.IWeek;
+import org.lastbubble.shliktr.impl.PickImpl;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public class NewPicksForm
 {
 	private int weekId;
 	private int playerId;
-	private Pick[] picks;
+	private IPick[] picks;
 	private int tiebreaker;
 
 
@@ -21,17 +22,17 @@ public class NewPicksForm
 	// Constructor
 	//-------------------------------------------------------------------------
 
-	public NewPicksForm( Week week )
+	public NewPicksForm( IWeek week )
 	{
-		this.weekId = week.getId().intValue();
+		this.weekId = week.getWeekNumber();
 
-		List<Game> games = week.getGames();
+		List<? extends IGame> games = week.getGames();
 
 		int gameCnt = games.size();
-		this.picks = new Pick[gameCnt];
+		this.picks = new IPick[gameCnt];
 		for( int i = 0; i < gameCnt; i++ )
 		{
-			this.picks[i] = new Pick(games.get(i));
+			this.picks[i] = new PickImpl(games.get(i));
 		}
 	}
 
@@ -48,7 +49,7 @@ public class NewPicksForm
 
 	public void setPlayerId( int n ) { this.playerId = n; }
 
-	public Pick[] getPicks() { return this.picks; }
+	public IPick[] getPicks() { return this.picks; }
 
 	public int getTiebreaker() { return this.tiebreaker; }
 
@@ -61,27 +62,28 @@ public class NewPicksForm
 
 	public String toString()
 	{
-		StringBuffer buf = new StringBuffer();
-		buf.append(getClass().getName());
-		buf.append("[");
-		buf.append("week=");
-		buf.append(getWeekId());
-		buf.append(",");
-		buf.append("player=");
-		buf.append(getPlayerId());
-		buf.append(",");
-		buf.append("picks=");
-		buf.append("[");
+		StringBuilder buf = new StringBuilder()
+			.append(getClass().getName())
+			.append("[")
+			.append("week=")
+			.append(getWeekId())
+			.append(",")
+			.append("player=")
+			.append(getPlayerId())
+			.append(",")
+			.append("picks=")
+			.append("[");
+
 		for( int i = 0; i < getPicks().length; i++ )
 		{
 			if( i > 0 ) buf.append(",");
 			buf.append(getPicks()[i]);
 		}
-		buf.append("]");
-		buf.append(",");
-		buf.append(getTiebreaker());
-		buf.append("]");
-		return buf.toString();
-	}
 
-}	// End of NewPicksForm
+		return buf.append("]")
+			.append(",")
+			.append(getTiebreaker())
+			.append("]")
+			.toString();
+	}
+}

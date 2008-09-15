@@ -1,9 +1,9 @@
 package org.lastbubble.shliktr.web;
 
-import org.lastbubble.shliktr.model.Pick;
-import org.lastbubble.shliktr.model.Picks;
-import org.lastbubble.shliktr.model.Player;
-import org.lastbubble.shliktr.model.Week;
+import org.lastbubble.shliktr.IPick;
+import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IPoolEntry;
+import org.lastbubble.shliktr.IWeek;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,7 +20,7 @@ public class ViewPicksController extends WeekController
 
 	@Override
 	protected ModelAndView handleWeek( ModelAndView modelAndView,
-		Week week, Player player, HttpServletRequest request )
+		IWeek week, IPlayer player, HttpServletRequest request )
 	{
 		if( player != null )
 		{
@@ -52,10 +52,9 @@ public class ViewPicksController extends WeekController
 			}
 		}
 
-		Picks picks = this.poolService.findPicksForPlayer(week, player, false);
-		modelAndView.addObject("picks", picks);
+		IPoolEntry entry = this.poolService.findEntry(week, player, false);
+		modelAndView.addObject("picks", entry);
 
 		return modelAndView;
 	}
-
 }

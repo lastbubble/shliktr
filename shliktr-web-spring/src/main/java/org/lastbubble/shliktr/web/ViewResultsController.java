@@ -1,8 +1,8 @@
 package org.lastbubble.shliktr.web;
 
-import org.lastbubble.shliktr.model.Player;
-import org.lastbubble.shliktr.model.PlayerScore;
-import org.lastbubble.shliktr.model.Week;
+import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IWeek;
+import org.lastbubble.shliktr.PlayerScore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,13 +20,13 @@ public class ViewResultsController extends WeekController
 
 	@Override
 	protected ModelAndView handleWeek( ModelAndView modelAndView,
-		Week week, Player player )
+		IWeek week, IPlayer player )
 	{
 		if( player != null && player.getUsername().equals("eric") )
 		{
 			modelAndView.addObject("isAdmin", Boolean.TRUE);
-			modelAndView.addObject("players",
-				this.poolService.findPlayersForWeek(week));
+			modelAndView.addObject("players", this.poolService
+				.findPlayersForWeek(week));
 		}
 
 		List<PlayerScore> scores = this.poolService.findScoresForWeek(week);
@@ -52,5 +52,4 @@ public class ViewResultsController extends WeekController
 
 		return modelAndView;
 	}
-
 }

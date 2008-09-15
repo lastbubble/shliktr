@@ -1,4 +1,8 @@
-package org.lastbubble.shliktr.model;
+package org.lastbubble.shliktr.dao;
+
+import org.lastbubble.shliktr.Winner;
+
+import java.util.List;
 
 /**
  * @version $Id$
@@ -30,6 +34,14 @@ public final class TestHelper
 		return week;
 	}
 
+	public static Week newWeek( int id, List<Game> games )
+	{
+		Week week = new Week();
+		week.setId(id);
+		week.setGames(games);
+		return week;
+	}
+
 	public static Pick newPick( Game game, Winner winner, int ranking )
 	{
 		Pick pick = new Pick();
@@ -37,5 +49,15 @@ public final class TestHelper
 		pick.setWinner(winner);
 		pick.setRanking(ranking);
 		return pick;
+	}
+
+	public static PoolEntry newEntry(
+		Week week, Player player, List<Pick> picks )
+	{
+		PoolEntry entry = new PoolEntry();
+		entry.setWeek(week);
+		entry.setPlayer(player);
+		entry.setPicks(picks);
+		return entry;
 	}
 }

@@ -1,6 +1,6 @@
 package org.lastbubble.shliktr.web;
 
-import org.lastbubble.shliktr.model.Week;
+import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.service.PoolService;
 
 import java.util.*;
@@ -26,7 +26,7 @@ public class EditWeekController extends SimpleFormController
 	public EditWeekController()
 	{
 		setCommandName("week");
-		setCommandClass(Week.class);
+		setCommandClass(IWeek.class);
 		setFormView("editWeek");
 		setSuccessView("redirect:/app/viewWeek");
 	}
@@ -67,7 +67,7 @@ public class EditWeekController extends SimpleFormController
 			catch( NumberFormatException e ) { }
 		}
 
-		Week week = this.poolService.findWeekById(weekId);
+		IWeek week = this.poolService.findWeekById(weekId);
 
 		if( week == null )
 		{
@@ -80,13 +80,12 @@ public class EditWeekController extends SimpleFormController
 	@Override
 	protected ModelAndView onSubmit( Object command ) throws Exception
 	{
-		Week week = (Week) command;
+		IWeek week = (IWeek) command;
 
-		this.poolService.makePersistentWeek(week);
+		this.poolService.saveWeek(week);
 
 		ModelAndView mv = new ModelAndView(getSuccessView());
-		mv.addObject("weekId", week.getId());
+		mv.addObject("weekId", week.getWeekNumber());
 		return mv;
 	}
-
-}	// End of EditWeekController
+}

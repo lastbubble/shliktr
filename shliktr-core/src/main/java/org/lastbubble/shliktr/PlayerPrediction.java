@@ -1,4 +1,6 @@
-package org.lastbubble.shliktr.model;
+package org.lastbubble.shliktr;
+
+import static org.lastbubble.shliktr.Winner.*;
 
 import java.util.*;
 
@@ -7,7 +9,7 @@ import java.util.*;
  */
 public class PlayerPrediction implements Comparable<PlayerPrediction>
 {
-	private Player player;
+	private IPlayer player;
 
 	private Winner[] mustWins;
 
@@ -18,7 +20,7 @@ public class PlayerPrediction implements Comparable<PlayerPrediction>
 	// Constructor
 	//---------------------------------------------------------------------------
 
-	public PlayerPrediction( Player player, int gameCnt )
+	public PlayerPrediction( IPlayer player, int gameCnt )
 	{
 		this.player = player;
 		this.mustWins = new Winner[gameCnt];
@@ -30,7 +32,7 @@ public class PlayerPrediction implements Comparable<PlayerPrediction>
 	// Methods
 	//---------------------------------------------------------------------------
 
-	public Player getPlayer() { return this.player; }
+	public IPlayer getPlayer() { return this.player; }
 
 	public List<String> getWinningOutcomes()
 	{
@@ -61,8 +63,7 @@ public class PlayerPrediction implements Comparable<PlayerPrediction>
 		String firstOutcome = this.winningOutcomes.get(0);
 		for( int i = 0; i < this.mustWins.length; i++ )
 		{
-			this.mustWins[i] = (firstOutcome.charAt(i) == '1') ?
-				Winner.HOME : Winner.AWAY;
+			this.mustWins[i] = (firstOutcome.charAt(i) == '1') ? HOME : AWAY;
 		}
 
 		int cnt = this.mustWins.length;
@@ -109,5 +110,4 @@ public class PlayerPrediction implements Comparable<PlayerPrediction>
 	{
 		return pp.winningOutcomes.size() - this.winningOutcomes.size();
 	}
-
-}	// End of PlayerPrediction
+}

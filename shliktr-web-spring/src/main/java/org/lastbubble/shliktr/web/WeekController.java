@@ -1,7 +1,7 @@
 package org.lastbubble.shliktr.web;
 
-import org.lastbubble.shliktr.model.Player;
-import org.lastbubble.shliktr.model.Week;
+import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.service.PoolService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -38,7 +38,8 @@ abstract class WeekController extends AbstractController
 		HttpServletRequest request, HttpServletResponse response )
 	throws Exception
 	{
-		Week week = null;
+		IWeek week = null;
+
 		String s = request.getParameter("weekId");
 		if( s != null )
 		{
@@ -60,7 +61,7 @@ abstract class WeekController extends AbstractController
 		ModelAndView modelAndView = new ModelAndView(this.viewName);
 		modelAndView.addObject("week", week);
 
-		Player player = WebUtils.getPlayerFromRequest(request);
+		IPlayer player = WebUtils.getPlayerFromRequest(request);
 		modelAndView.addObject("player", player);
 
 		return handleWeek(modelAndView, week, player, request);
@@ -72,15 +73,14 @@ abstract class WeekController extends AbstractController
 	//-------------------------------------------------------------------------
 
 	protected ModelAndView handleWeek( ModelAndView modelAndView,
-		Week week, Player player, HttpServletRequest request )
+		IWeek week, IPlayer player, HttpServletRequest request )
 	{
 		return handleWeek(modelAndView, week, player);
 	}
 
 	protected ModelAndView handleWeek( ModelAndView modelAndView,
-		Week week, Player player )
+		IWeek week, IPlayer player )
 	{
 		return modelAndView;
 	}
-
 }

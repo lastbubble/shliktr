@@ -1,7 +1,5 @@
 package org.lastbubble.shliktr;
 
-import org.lastbubble.shliktr.model.Winner;
-
 /**
  * @version $Id$
  */
@@ -14,6 +12,8 @@ public interface IPick
 	void setWinner( Winner winner );
 
 	ITeam getTeam();
+
+	boolean isCorrect();
 
 	int getRanking();
 

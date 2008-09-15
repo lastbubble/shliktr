@@ -1,10 +1,10 @@
 package org.lastbubble.shliktr.ui;
 
-import org.lastbubble.shliktr.model.Picks;
-import org.lastbubble.shliktr.model.Player;
-import org.lastbubble.shliktr.model.PlayerScore;
-import org.lastbubble.shliktr.model.StringUtils;
-import org.lastbubble.shliktr.model.Week;
+import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IPoolEntry;
+import org.lastbubble.shliktr.IWeek;
+import org.lastbubble.shliktr.PlayerScore;
+import org.lastbubble.shliktr.StringUtils;
 import org.lastbubble.shliktr.service.PoolService;
 
 import java.awt.Component;
@@ -47,31 +47,31 @@ public class FinalScoresView implements View
 
 	public Component render() { return this.scroll; }
 
-	public void setModel( Week week, Picks picks )
+	public void setModel( IWeek week, IPoolEntry entry )
 	{
 		this.text.setText("");
 
 		FinalScore finalScore;
 
-		List players = this.poolService.findAllPlayers();
+		List<? extends IPlayer> players = this.poolService.findAllPlayers();
 		List scores = new ArrayList();
-		for( Iterator i = players.iterator(); i.hasNext(); )
+		for( IPlayer player : players )
 		{
-			finalScore = new FinalScore((Player) i.next());
+			finalScore = new FinalScore(player);
 			scores.add(finalScore);
 		}
 
 		PlayerScore result;
-		for( int i = 1, last = week.getId().intValue(); i <= last; i++ )
+		for( int i = 1, last = week.getWeekNumber(); i <= last; i++ )
 		{
-			Week wk = this.poolService.findWeekById( new Integer(i));
+			IWeek wk = this.poolService.findWeekById( new Integer(i));
 
 			for( Iterator j = scores.iterator(); j.hasNext(); )
 			{
 				finalScore = (FinalScore) j.next();
-				result = new PlayerScore(
-					this.poolService.findPicksForPlayer(
-						wk, finalScore.getPlayer(), true));
+				result = new PlayerScore(this.poolService
+					.findEntry(wk, finalScore.getPlayer(), true)
+				);
 
 				finalScore.addScore(i, result.getScore());
 			}
@@ -85,7 +85,7 @@ public class FinalScoresView implements View
 		buf.append(StringUtils.pad("PLAYER", 10, false));
 		buf.append(' ');
 		buf.append(StringUtils.pad("SCORE", 5, true));
-		for( int i = 1, last = week.getId().intValue(); i <= last; i++ )
+		for( int i = 1, last = week.getWeekNumber(); i <= last; i++ )
 		{
 			buf.append(' ');
 			buf.append(StringUtils.pad("#(WEEK)", 7, true));
@@ -100,7 +100,7 @@ public class FinalScoresView implements View
 			buf.append(' ');
 			buf.append(
 				StringUtils.pad(finalScore.getScore(), 5, true));
-			for( int j = 0, last = week.getId().intValue(); j < last; j++ )
+			for( int j = 0, last = week.getWeekNumber(); j < last; j++ )
 			{
 				buf.append(' ');
 				buf.append(StringUtils.pad(
@@ -128,17 +128,17 @@ public class FinalScoresView implements View
 
 	private class FinalScore implements Comparable
 	{
-		private Player im_player;
+		private IPlayer im_player;
 		private List im_weeklyScores;
 		private int im_finalScore;
 
-		private FinalScore( Player player )
+		private FinalScore( IPlayer player )
 		{
 			im_player = player;
 			im_weeklyScores = new ArrayList();
 		}
 
-		private Player getPlayer() { return im_player; }
+		private IPlayer getPlayer() { return im_player; }
 
 		private void addScore( int week, int score )
 		{

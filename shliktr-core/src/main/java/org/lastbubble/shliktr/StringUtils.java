@@ -1,4 +1,4 @@
-package org.lastbubble.shliktr.model;
+package org.lastbubble.shliktr;
 
 /**
  * @version $Id: StringUtils.java 50 2007-11-20 19:21:56Z eheaton $

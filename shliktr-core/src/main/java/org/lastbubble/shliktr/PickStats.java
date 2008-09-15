@@ -1,4 +1,4 @@
-package org.lastbubble.shliktr.model;
+package org.lastbubble.shliktr;
 
 import java.util.*;
 
@@ -7,7 +7,7 @@ import java.util.*;
  */
 public class PickStats implements Comparable<PickStats>
 {
-	private Team team;
+	private ITeam team;
 
 	private List<Integer> rankings;
 
@@ -16,7 +16,7 @@ public class PickStats implements Comparable<PickStats>
 	// Constructor
 	//---------------------------------------------------------------------------
 
-	public PickStats( Team team )
+	public PickStats( ITeam team )
 	{
 		this.team = team;
 		this.rankings = new ArrayList<Integer>();
@@ -27,7 +27,7 @@ public class PickStats implements Comparable<PickStats>
 	// Methods
 	//---------------------------------------------------------------------------
 
-	public Team getTeam() { return this.team; }
+	public ITeam getTeam() { return this.team; }
 
 	public List<Integer> getRankings()
 	{

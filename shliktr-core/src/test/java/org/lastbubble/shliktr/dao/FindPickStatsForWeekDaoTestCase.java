@@ -1,7 +1,6 @@
 package org.lastbubble.shliktr.dao;
 
-import org.lastbubble.shliktr.model.PickStats;
-import org.lastbubble.shliktr.model.Week;
+import org.lastbubble.shliktr.PickStats;
 
 import java.util.*;
 

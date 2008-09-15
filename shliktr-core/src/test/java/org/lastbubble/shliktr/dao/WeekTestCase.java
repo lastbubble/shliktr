@@ -1,6 +1,6 @@
-package org.lastbubble.shliktr.model;
+package org.lastbubble.shliktr.dao;
 
-import static org.lastbubble.shliktr.model.TestHelper.*;
+import static org.lastbubble.shliktr.dao.TestHelper.*;
 
 import java.util.*;
 

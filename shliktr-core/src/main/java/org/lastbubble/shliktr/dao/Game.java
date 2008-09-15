@@ -1,7 +1,8 @@
-package org.lastbubble.shliktr.model;
+package org.lastbubble.shliktr.dao;
 
 import org.lastbubble.shliktr.IGame;
 import static org.lastbubble.shliktr.ShliktrUtils.*;
+import org.lastbubble.shliktr.Winner;
 
 import java.util.Date;
 
@@ -46,8 +47,7 @@ public final class Game implements IGame
 	// Constructor
 	//-------------------------------------------------------------------------
 
-	/* TODO: make this package-private */
-	public Game() { }
+	Game() { }
 
 
 	//-------------------------------------------------------------------------

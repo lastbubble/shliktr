@@ -2,14 +2,14 @@ package org.lastbubble.shliktr.dao.hibernate;
 
 import org.lastbubble.shliktr.IPlayer;
 import org.lastbubble.shliktr.IWeek;
+import org.lastbubble.shliktr.PickStats;
+import org.lastbubble.shliktr.dao.Game;
+import org.lastbubble.shliktr.dao.Pick;
+import org.lastbubble.shliktr.dao.Player;
+import org.lastbubble.shliktr.dao.PoolEntry;
 import org.lastbubble.shliktr.dao.PoolDao;
-import org.lastbubble.shliktr.model.Game;
-import org.lastbubble.shliktr.model.Pick;
-import org.lastbubble.shliktr.model.Picks;
-import org.lastbubble.shliktr.model.PickStats;
-import org.lastbubble.shliktr.model.Player;
-import org.lastbubble.shliktr.model.Team;
-import org.lastbubble.shliktr.model.Week;
+import org.lastbubble.shliktr.dao.Team;
+import org.lastbubble.shliktr.dao.Week;
 
 import java.util.*;
 
@@ -106,7 +106,7 @@ public final class PoolDaoHibernate implements PoolDao
 		Set<Player> players = new HashSet<Player>();
 
 		players.addAll(getSession().createQuery(
-			"select picks.player from Picks picks where picks.week = ?")
+			"select picks.player from PoolEntry picks where picks.week = ?")
 			.setEntity(0, week)
 			.list());
 
@@ -118,15 +118,6 @@ public final class PoolDaoHibernate implements PoolDao
 		return (Player) getSession().get(Player.class, id);
 	}
 
-	public Player findPlayerByName( String name )
-	{
-		Criteria crit = getSession().createCriteria(Player.class);
-
-		crit.add(Restrictions.eq("name", name));
-
-		return (Player) crit.uniqueResult();
-	}
-
 	public Player findPlayerByUsername( String username )
 	{
 		return (Player) getSession()
@@ -135,19 +126,19 @@ public final class PoolDaoHibernate implements PoolDao
 			.uniqueResult();
 	}
 
-	public List<Picks> findPicksForWeek( IWeek week )
+	public List<PoolEntry> findEntriesForWeek( IWeek week )
 	{
-		Criteria crit = getSession().createCriteria(Picks.class);
-
-		crit.add(Restrictions.eq("week", week));
-
-		return crit.list();
+		return getSession()
+			.createCriteria(PoolEntry.class)
+			.createAlias("week", "week")
+			.add(Restrictions.eq("week.id", week.getWeekNumber()))
+			.list();
 	}
 
-	public Picks findPicksForPlayer( IWeek week, IPlayer player )
+	public PoolEntry findEntry( IWeek week, IPlayer player )
 	{
-		return (Picks) getSession()
-			.createCriteria(Picks.class)
+		return (PoolEntry) getSession()
+			.createCriteria(PoolEntry.class)
 			.createAlias("week", "week")
 			.createAlias("player", "player")
 			.add(Restrictions.eq("week.id", week.getWeekNumber()))
@@ -155,7 +146,7 @@ public final class PoolDaoHibernate implements PoolDao
 			.uniqueResult();
 	}
 
-	public List<PickStats> findPickStatsForWeek( Week week )
+	public List<PickStats> findPickStatsForWeek( IWeek week )
 	{
 		List<Pick> picks = (List<Pick>) getSession()
 			.createCriteria(Pick.class)
@@ -208,92 +199,13 @@ public final class PoolDaoHibernate implements PoolDao
 		}
 	}
 
-	public void makePersistentWeek( Week week )
+	public void persistWeek( Week week )
 	{
 		getSession().saveOrUpdate(week);
 	}
 
-	public void makePersistentPicks( Picks picks )
+	public void persistEntry( PoolEntry entry )
 	{
-		getSession().saveOrUpdate(picks);
+		getSession().saveOrUpdate(entry);
 	}
-
-/*
-	public Class<T> getPersistentClass() { return m_persistentClass; }
-
-	protected List<T> findByCriteria( Criterion... criterion )
-	{
-		Criteria crit = getSession().createCriteria(getPersistentClass());
-
-		for( Criterion c : criterion )
-		{
-			crit.add(c);
-		}
-
-		return crit.list();
-	}
-
-
-	//-------------------------------------------------------------------------
-	// GenericDAO methods
-	//-------------------------------------------------------------------------
-
-	public T findById( ID id, boolean lock )
-	{
-		T entity;
-
-		if( lock )
-		{
-			entity = (T) getSession().get(getPersistentClass(), id,
-				LockMode.UPGRADE);
-		}
-		else
-		{
-			entity = (T) getSession().get(getPersistentClass(), id);
-		}
-
-		return entity;
-	}
-
-	public List<T> findAll()
-	{
-		return findByCriteria();
-	}
-
-	public List<T> findByExample( T example, String... excludeProperty )
-	{
-		Criteria crit = getSession().createCriteria(getPersistentClass());
-
-		Example ex = Example.create(example);
-		for( String exclude : excludeProperty )
-		{
-			ex.excludeProperty(exclude);
-		}
-		crit.add(ex);
-
-		return crit.list();
-	}
-
-	public T makePersistent( T entity )
-	{
-		getSession().saveOrUpdate(entity);
-		return entity;
-	}
-
-	public void makeTransient( T entity )
-	{
-		getSession().delete(entity);
-	}
-
-	public void flush()
-	{
-		getSession().flush();
-	}
-
-	public void clear()
-	{
-		getSession().clear();
-	}
-*/
-
-}	// End of PoolDaoHibernate
+}

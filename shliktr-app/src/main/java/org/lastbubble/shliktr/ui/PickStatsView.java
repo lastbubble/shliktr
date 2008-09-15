@@ -1,8 +1,8 @@
 package org.lastbubble.shliktr.ui;
 
-import org.lastbubble.shliktr.model.Picks;
-import org.lastbubble.shliktr.model.StringUtils;
-import org.lastbubble.shliktr.model.Week;
+import org.lastbubble.shliktr.IPoolEntry;
+import org.lastbubble.shliktr.IWeek;
+import org.lastbubble.shliktr.StringUtils;
 import org.lastbubble.shliktr.service.PoolService;
 
 import java.awt.Component;
@@ -45,7 +45,7 @@ public class PickStatsView implements View
 
 	public Component render() { return this.scroll; }
 
-	public void setModel( Week week, Picks picks )
+	public void setModel( IWeek week, IPoolEntry entry )
 	{
 		this.text.setText("");
 

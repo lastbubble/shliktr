@@ -1,10 +1,10 @@
 package org.lastbubble.shliktr.web;
 
-import org.lastbubble.shliktr.model.Game;
-import org.lastbubble.shliktr.model.Player;
-import org.lastbubble.shliktr.model.PlayerPrediction;
-import org.lastbubble.shliktr.model.Week;
-import org.lastbubble.shliktr.model.Winner;
+import org.lastbubble.shliktr.IGame;
+import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IWeek;
+import org.lastbubble.shliktr.PlayerPrediction;
+import org.lastbubble.shliktr.Winner;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,16 +23,16 @@ public class PredictResultsController extends WeekController
 
 	@Override
 	protected ModelAndView handleWeek( ModelAndView modelAndView,
-		Week week, Player player )
+		IWeek week, IPlayer player )
 	{
 		List<Prediction> predictions = new ArrayList<Prediction>();
 		modelAndView.addObject("predictions", predictions);
 
-		List<Game> games = week.getGames();
+		List<? extends IGame> games = week.getGames();
 		List<Winner> winners = new ArrayList<Winner>(games.size());
-		List<Game> unfinished = new ArrayList<Game>(games.size());
+		List<IGame> unfinished = new ArrayList<IGame>(games.size());
 
-		for( Game game : games )
+		for( IGame game : games )
 		{
 			Winner winner = game.getWinner();
 			winners.add(winner);
@@ -65,13 +65,13 @@ public class PredictResultsController extends WeekController
 
 	public static class Prediction
 	{
-		private Player player;
+		private IPlayer player;
 		private int outcomeCnt;
 		private List<String> outcomes;
 		private String mustWins;
 
 		public Prediction(
-			Player player, int outcomeCnt, List<String> outcomes, String mustWins )
+			IPlayer player, int outcomeCnt, List<String> outcomes, String mustWins )
 		{
 			this.player = player;
 			this.outcomeCnt = outcomeCnt;
@@ -80,9 +80,9 @@ public class PredictResultsController extends WeekController
 		}
 
 		public static Prediction create(
-			PlayerPrediction playerPrediction, List<Game> games )
+			PlayerPrediction playerPrediction, List<? extends IGame> games )
 		{
-			Player player = playerPrediction.getPlayer();
+			IPlayer player = playerPrediction.getPlayer();
 
 			List<String> winningOutcomes = playerPrediction.getWinningOutcomes();
 			int outcomeCnt = winningOutcomes.size();
@@ -104,7 +104,7 @@ public class PredictResultsController extends WeekController
 				Winner winner = mustWins[i];
 				if( winner != null )
 				{
-					Game game = games.get(i);
+					IGame game = games.get(i);
 
 					if( buf.length() > 0 ) buf.append(", ");
 
@@ -119,7 +119,8 @@ public class PredictResultsController extends WeekController
 			return new Prediction(player, outcomeCnt, outcomes, buf.toString());
 		}
 
-		public static String describeOutcome( String outcome, List<Game> games )
+		public static String describeOutcome(
+			String outcome, List<? extends IGame> games )
 		{
 			StringBuilder buf = new StringBuilder();
 
@@ -128,7 +129,7 @@ public class PredictResultsController extends WeekController
 			{
 				if( buf.length() > 0 ) buf.append(", ");
 
-				Game game = games.get(i);
+				IGame game = games.get(i);
 				buf.append(outcome.charAt(i) == '1' ?
 					game.getHomeTeam().getAbbr().toUpperCase() :
 					game.getAwayTeam().getAbbr().toUpperCase()
@@ -138,7 +139,7 @@ public class PredictResultsController extends WeekController
 			return buf.toString();
 		}
 
-		public Player getPlayer() { return this.player; }
+		public IPlayer getPlayer() { return this.player; }
 
 		public int getOutcomeCount() { return this.outcomeCnt; }
 
@@ -146,5 +147,4 @@ public class PredictResultsController extends WeekController
 
 		public String getMustWins() { return this.mustWins; }
 	}
-
 }

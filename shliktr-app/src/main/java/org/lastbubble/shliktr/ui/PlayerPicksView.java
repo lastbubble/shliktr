@@ -1,14 +1,15 @@
 package org.lastbubble.shliktr.ui;
 
-import org.lastbubble.shliktr.model.Pick;
-import org.lastbubble.shliktr.model.Picks;
-import org.lastbubble.shliktr.model.PlayerScore;
-import org.lastbubble.shliktr.model.Week;
+import org.lastbubble.shliktr.IPick;
+import org.lastbubble.shliktr.IPoolEntry;
+import org.lastbubble.shliktr.IWeek;
+import org.lastbubble.shliktr.PlayerScore;
 import org.lastbubble.shliktr.service.PoolService;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
+import java.util.List;
 import javax.swing.Box;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -30,7 +31,7 @@ public class PlayerPicksView extends JPanel implements View, DocumentListener
 
 	// model
 
-	private Picks picks;
+	private IPoolEntry entry;
 	/** whether the view has changed the data */
 	private boolean dataChanged;
 
@@ -114,16 +115,17 @@ public class PlayerPicksView extends JPanel implements View, DocumentListener
 	{
 		this.picksPanel.removeAll();
 
-		if( this.picks == null )
+		if( this.entry == null )
 		{
 			this.picksPanel.add( new JLabel("No data available."));
 			return;
 		}
 
-		int pickCnt = this.picks.size();
+		List<? extends IPick> picks = this.entry.getPicks();
+		int pickCnt = picks.size();
 		for( int i = 0; i < this.pickUIs.length; i++ )
 		{
-			Pick pick = (i < pickCnt) ? this.picks.getPickAt(i) : null;
+			IPick pick = (i < pickCnt) ? picks.get(i) : null;
 			this.pickUIs[i].setPick(pick);
 		}
 
@@ -144,11 +146,11 @@ public class PlayerPicksView extends JPanel implements View, DocumentListener
 		this.tiebreakerLbl.setText("Tiebreaker guess:");
 
 		this.tiebreakerFld.getDocument().removeDocumentListener(this);
-		this.tiebreakerFld.setText(String.valueOf(this.picks.getTiebreaker()));
+		this.tiebreakerFld.setText(String.valueOf(this.entry.getTiebreaker()));
 		this.tiebreakerFld.getDocument().addDocumentListener(this);
 
 		this.scoreLbl.setText("Total score: "+
-			new PlayerScore(this.picks).getScore());
+			new PlayerScore(this.entry).getScore());
 
 		revalidate();
 		repaint();
@@ -163,13 +165,13 @@ public class PlayerPicksView extends JPanel implements View, DocumentListener
 
 	public void validatePicks()
 	{
-		if( this.picks != null )
+		if( this.entry != null )
 		{
 			String[] errMsg = new String[1];
-			if(! this.picks.validate(errMsg) )
+			/*if(! this.picks.validate(errMsg) )
 			{
 				JOptionPane.showMessageDialog(this, errMsg);
-			}
+			}*/
 		}
 	}
 
@@ -182,18 +184,18 @@ public class PlayerPicksView extends JPanel implements View, DocumentListener
 
 	public Component render() { return this; }
 
-	public void setModel( Week week, Picks picks )
+	public void setModel( IWeek week, IPoolEntry entry )
 	{
-		this.picks = picks;
+		this.entry = entry;
 
 		updateView();
 	}
 
 	public void save()
 	{
-		if( this.picks != null )
+		if( this.entry != null )
 		{
-			this.poolService.makePersistentPicks(this.picks);
+			this.poolService.saveEntry(this.entry);
 		}
 	}
 
@@ -224,15 +226,14 @@ public class PlayerPicksView extends JPanel implements View, DocumentListener
 
 	private void documentUpdated()
 	{
-		if( this.picks != null )
+		if( this.entry != null )
 		{
 			try {
 				String s = this.tiebreakerFld.getText();
-				this.picks.setTiebreaker(Integer.parseInt(s));
+				this.entry.setTiebreaker(Integer.parseInt(s));
 				this.dataChanged = true;
 
 			} catch( NumberFormatException e ) { /* ignore */ }
 		}
 	}
-
-}	// End of PlayerPicksView
+}

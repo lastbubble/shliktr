@@ -1,4 +1,4 @@
-package org.lastbubble.shliktr.model;
+package org.lastbubble.shliktr.dao;
 
 import org.lastbubble.shliktr.IPick;
 import org.lastbubble.shliktr.IPoolEntry;
@@ -24,7 +24,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "picks")
-public class Picks implements IPoolEntry, Comparable<Picks>
+public class PoolEntry implements IPoolEntry, Comparable<IPoolEntry>
 {
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
@@ -52,21 +52,21 @@ public class Picks implements IPoolEntry, Comparable<Picks>
 	// Constructor
 	//-------------------------------------------------------------------------
 
-	public Picks() { }
+	PoolEntry() { }
 
-	public Picks( Week week, Player player, List<Pick> picks )
+	PoolEntry( Week week, Player player, List<Pick> picks )
 	{
 		this.week = week;
 		this.player = player;
 		this.picks = picks;
 	}
 
-	public static Picks createForPlayer( Week week, Player player )
+	public static PoolEntry createForPlayer( Week week, Player player )
 	{
-		Picks picks = new Picks();
+		PoolEntry entry = new PoolEntry();
 
-		picks.setWeek(week);
-		picks.setPlayer(player);
+		entry.setWeek(week);
+		entry.setPlayer(player);
 
 		List<Game> games = week.getGames();
 
@@ -81,9 +81,9 @@ public class Picks implements IPoolEntry, Comparable<Picks>
 			pickList.add(pick);
 		}
 
-		picks.setPicks(pickList);
+		entry.setPicks(pickList);
 
-		return picks;
+		return entry;
 	}
 
 
@@ -199,9 +199,9 @@ public class Picks implements IPoolEntry, Comparable<Picks>
 	}
 
 	/** Implements Comparable, so picks can be sorted by player. */
-	public int compareTo( Picks p )
+	public int compareTo( IPoolEntry entry )
 	{
-		return getPlayer().compareTo(p.getPlayer());
+		return getPlayer().compareTo(entry.getPlayer());
 	}
 
 	public int hashCode()
@@ -211,24 +211,24 @@ public class Picks implements IPoolEntry, Comparable<Picks>
 
 	public boolean equals( Object obj )
 	{
-		if(! (obj instanceof Picks) ) return false;
+		if( obj == this ) return true;
 
-		Picks p = (Picks) obj;
+		if( obj instanceof PoolEntry )
+		{
+			PoolEntry entry = (PoolEntry) obj;
+			return (getWeek().equals(entry.getWeek()) &&
+					getPlayer().equals(entry.getPlayer()));
+		}
 
-		return (getWeek().equals(p.getWeek()) &&
-				getPlayer().equals(p.getPlayer()));
+		return false;
 	}
 
-	/** @return	a String representation of the picks. */
 	public String toString()
 	{
-		StringBuffer buf = new StringBuffer();
-
-		buf.append(getPlayer().getName());
-		buf.append("'s picks for ");
-		buf.append(getWeek());
-
-		return buf.toString();
+		return new StringBuilder()
+			.append(getPlayer().getName())
+			.append("'s picks for ")
+			.append(getWeek())
+			.toString();
 	}
-
-}	// End of Picks
+}

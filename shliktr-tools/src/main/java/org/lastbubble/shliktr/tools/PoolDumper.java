@@ -2,10 +2,9 @@ package org.lastbubble.shliktr.tools;
 
 import org.lastbubble.shliktr.IGame;
 import org.lastbubble.shliktr.IPick;
+import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.ITeam;
 import org.lastbubble.shliktr.IWeek;
-import org.lastbubble.shliktr.model.Pick;
-import org.lastbubble.shliktr.model.Picks;
 import org.lastbubble.shliktr.service.PoolService;
 
 import java.io.IOException;
@@ -74,9 +73,10 @@ public class PoolDumper
 
 			writer.println(buf.toString());
 
-			List<Picks> entries = this.poolService.findPicksForWeek(week);
+			List<? extends IPoolEntry> entries = this.poolService
+				.findEntriesForWeek(week);
 
-			for( Picks entry : entries )
+			for( IPoolEntry entry : entries )
 			{
 				buf.setLength(0);
 
@@ -85,8 +85,8 @@ public class PoolDumper
 
 				Map<Integer, ITeam> teamsByRank = new HashMap<Integer, ITeam>();
 
-				List<Pick> picks = entry.getPicks();
-				for( Pick pick : picks )
+				List<? extends IPick> picks = entry.getPicks();
+				for( IPick pick : picks )
 				{
 					teamsByRank.put(pick.getRanking(), pick.getTeam());
 				}

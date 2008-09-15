@@ -1,9 +1,9 @@
 package org.lastbubble.shliktr.ui;
 
-import org.lastbubble.shliktr.model.Picks;
-import org.lastbubble.shliktr.model.Player;
-import org.lastbubble.shliktr.model.PlayerScore;
-import org.lastbubble.shliktr.model.Week;
+import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IPoolEntry;
+import org.lastbubble.shliktr.IWeek;
+import org.lastbubble.shliktr.PlayerScore;
 import org.lastbubble.shliktr.service.PoolService;
 
 import java.awt.*;
@@ -98,7 +98,7 @@ public class Pool extends JFrame
 					updatePicksChooser();
 
 				Pool.this.currentView.setModel(
-					getCurrentWeek(), getCurrentPicks());
+					getCurrentWeek(), getCurrentEntry());
 				refreshView();
 			}
 		});
@@ -108,7 +108,7 @@ public class Pool extends JFrame
 			public void actionPerformed( ActionEvent e )
 			{
 				Pool.this.currentView.setModel(
-					getCurrentWeek(), getCurrentPicks());
+					getCurrentWeek(), getCurrentEntry());
 				refreshView();
 			}
 		});
@@ -128,7 +128,7 @@ public class Pool extends JFrame
 		private PoolService poolService;
 
 		private Integer weekId;
-		private Week week;
+		private IWeek week;
 
 		private String description;
 
@@ -140,7 +140,7 @@ public class Pool extends JFrame
 			this.description = "WEEK "+this.weekId;
 		}
 
-		synchronized private Week getWeek()
+		synchronized private IWeek getWeek()
 		{
 			if( this.week == null )
 			{
@@ -177,14 +177,14 @@ public class Pool extends JFrame
 	/**
 	 * @return	the currently selected week (as an int from 1-17).
 	 */
-	public Week getCurrentWeek()
+	public IWeek getCurrentWeek()
 	{
 		return ((WeekEntry) m_weekChooser.getSelectedItem()).getWeek();
 	}
 
-	public Picks getCurrentPicks()
+	public IPoolEntry getCurrentEntry()
 	{
-		return (Picks) this.picksChooser.getSelectedItem();
+		return (IPoolEntry) this.picksChooser.getSelectedItem();
 	}
 
 
@@ -201,7 +201,7 @@ public class Pool extends JFrame
 		if( this.picksChooser.isVisible() )
 			updatePicksChooser();
 
-		this.currentView.setModel(getCurrentWeek(), getCurrentPicks());
+		this.currentView.setModel(getCurrentWeek(), getCurrentEntry());
 
 		m_mainPanel.removeAll();
 		m_mainPanel.add(this.currentView.render(), BorderLayout.CENTER);
@@ -211,17 +211,17 @@ public class Pool extends JFrame
 
 	private void updatePicksChooser()
 	{
-		List<Picks> weekPicks =
-			this.poolService.findPicksForWeek(getCurrentWeek());
+		List<? extends IPoolEntry> entries = this.poolService
+			.findEntriesForWeek(getCurrentWeek());
 
 		this.picksChooser.removeAllItems();
 
-		for( Picks picks : weekPicks )
+		for( IPoolEntry entry : entries )
 		{
-			this.picksChooser.addItem(picks);
+			this.picksChooser.addItem(entry);
 		}
 
-		if( weekPicks.size() > 0 )
+		if( entries.size() > 0 )
 			this.picksChooser.setSelectedIndex(0);
 	}
 
@@ -301,9 +301,6 @@ public class Pool extends JFrame
 		// save current view's data; exit
 		if( this.currentView == null || this.currentView.exit() )
 		{
-			// close database connection
-			this.poolService.closeConnection();
-
 			System.exit(0);
 		}
 	}
@@ -336,10 +333,10 @@ public class Pool extends JFrame
 				return;
 			}
 
-			Player[] players = new Player[v.size()];
+			IPlayer[] players = new IPlayer[v.size()];
 			v.copyInto(players);
 
-			Player player = (Player) JOptionPane.showInputDialog(
+			IPlayer player = (IPlayer) JOptionPane.showInputDialog(
 									Pool.this,
 									"Choose a player", "Choose a Player",
 									JOptionPane.INFORMATION_MESSAGE, null,
@@ -347,38 +344,46 @@ public class Pool extends JFrame
 
 			if( player != null )
 			{
-				Week week = getCurrentWeek();
+				IWeek week = getCurrentWeek();
 
-				Picks picks = Pool.this.poolService.findPicksForPlayer(
-						week, player, false);
+				IPoolEntry entry = Pool.this.poolService
+					.findEntry(week, player, false);
 
-				if( picks != null )
+				if( entry != null )
 				{
 					JOptionPane.showMessageDialog(Pool.this, new String[] {
 						player+" already has picks for week "+
-						week.getId()+"."});
+						week.getWeekNumber()+"."});
 				}
 				else
 				{
-					picks = Pool.this.poolService.findPicksForPlayer(
+					entry = Pool.this.poolService.findEntry(
 						week, player, true);
 
-					List<Picks> weekPicks = new ArrayList<Picks>(
-						Pool.this.poolService.findPicksForWeek(week));
+					List<IPoolEntry> entries = new ArrayList<IPoolEntry>(
+						Pool.this.poolService.findEntriesForWeek(week)
+					);
 
-					weekPicks.add(picks);
+					entries.add(entry);
 
-					Collections.sort(weekPicks);
+					Collections.sort(entries, new Comparator<IPoolEntry>() {
+						public int compare( IPoolEntry entry1, IPoolEntry entry2 )
+						{
+							String name1 = entry1.getPlayer().getName();
+							String name2 = entry2.getPlayer().getName();
+							return name1.compareTo(name2);
+						}
+					});
 
 					Pool.this.picksChooser.removeAllItems();
 
-					for( Picks p : weekPicks )
+					for( IPoolEntry anEntry : entries )
 					{
-						Pool.this.picksChooser.addItem(p);
+						Pool.this.picksChooser.addItem(anEntry);
 					}
 				}
 
-				Pool.this.picksChooser.setSelectedItem(picks);
+				Pool.this.picksChooser.setSelectedItem(entry);
 			}
 		}
 

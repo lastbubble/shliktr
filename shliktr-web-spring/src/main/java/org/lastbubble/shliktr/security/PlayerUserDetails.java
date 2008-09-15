@@ -1,6 +1,6 @@
 package org.lastbubble.shliktr.security;
 
-import org.lastbubble.shliktr.model.Player;
+import org.lastbubble.shliktr.IPlayer;
 
 import org.acegisecurity.GrantedAuthority;
 import org.acegisecurity.GrantedAuthorityImpl;
@@ -16,7 +16,7 @@ public class PlayerUserDetails implements UserDetails
 			new GrantedAuthorityImpl("ROLE_PLAYER"),
 		};
 
-	private Player player;
+	private IPlayer player;
 	private GrantedAuthority[] authorities;
 
 
@@ -24,7 +24,7 @@ public class PlayerUserDetails implements UserDetails
 	// Constructor
 	//-------------------------------------------------------------------------
 
-	PlayerUserDetails( Player player )
+	PlayerUserDetails( IPlayer player )
 	{
 		this.player = player;
 		this.authorities = DEFAULT_AUTHORITIES;
@@ -40,12 +40,11 @@ public class PlayerUserDetails implements UserDetails
 	}
 
 
-
 	//-------------------------------------------------------------------------
 	// Methods
 	//-------------------------------------------------------------------------
 
-	public Player getPlayer() { return this.player; }
+	public IPlayer getPlayer() { return this.player; }
 
 
 	//-------------------------------------------------------------------------
@@ -65,5 +64,4 @@ public class PlayerUserDetails implements UserDetails
 	public boolean isCredentialsNonExpired() { return true; }
 
 	public boolean isEnabled() { return true; }
-
-}	// End of PlayerUserDetails
+}

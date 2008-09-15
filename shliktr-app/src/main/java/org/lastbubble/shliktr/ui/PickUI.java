@@ -1,9 +1,10 @@
 package org.lastbubble.shliktr.ui;
 
-import org.lastbubble.shliktr.model.Game;
-import org.lastbubble.shliktr.model.Pick;
-import org.lastbubble.shliktr.model.Team;
-import org.lastbubble.shliktr.model.Winner;
+import org.lastbubble.shliktr.IGame;
+import org.lastbubble.shliktr.IPick;
+import org.lastbubble.shliktr.ITeam;
+import org.lastbubble.shliktr.Winner;
+import static org.lastbubble.shliktr.Winner.*;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -26,7 +27,7 @@ public class PickUI implements ActionListener
 {
 	// model
 
-	private Pick pick;
+	private IPick pick;
 
 	// components
 
@@ -44,10 +45,10 @@ public class PickUI implements ActionListener
 	 */
 	public PickUI()
 	{
-		this.awayBtn = new PickButton(Winner.AWAY);
+		this.awayBtn = new PickButton(AWAY);
 		this.awayBtn.addActionListener(this);
 
-		this.homeBtn = new PickButton(Winner.HOME);
+		this.homeBtn = new PickButton(HOME);
 		this.homeBtn.addActionListener(this);
 
 		this.rankingChooser = new NumberedComboBox(16);
@@ -69,10 +70,10 @@ public class PickUI implements ActionListener
 	public Component getRankingChooser() { return this.rankingChooser; }
 
 	/** @return	the pick tracked by the UI. Can be null. */
-	public Pick getPick() { return this.pick; }
+	public IPick getPick() { return this.pick; }
 
 	/** Sets the pick tracked by the UI. */
-	public void setPick( Pick pick )
+	public void setPick( IPick pick )
 	{
 		this.pick = pick;
 
@@ -81,7 +82,7 @@ public class PickUI implements ActionListener
 
 		this.rankingChooser.setSelectedItem((pick != null) ?
 			new Integer(pick.getRanking()) : new Integer(0));
-		this.rankingChooser.setEnabled(pick != null && (! pick.isComplete()));
+		//this.rankingChooser.setEnabled(pick != null && (! pick.isComplete()));
 	}
 
 	public boolean hasChanged() { return (getPick() != null); }
@@ -91,7 +92,7 @@ public class PickUI implements ActionListener
 	 */
 	public void actionPerformed( ActionEvent e )
 	{
-		Pick pick = getPick();
+		IPick pick = getPick();
 
 		if( pick == null ) return;
 
@@ -125,7 +126,7 @@ public class PickUI implements ActionListener
 	private static class PickButton extends JButton
 	{
 		private Winner winner;
-		private Pick pick;
+		private IPick pick;
 
 		private PickButton( Winner winner )
 		{
@@ -136,25 +137,25 @@ public class PickUI implements ActionListener
 			setHorizontalAlignment(SwingConstants.LEADING);
 		}
 
-		private Game getGame()
+		private IGame getGame()
 		{
 			return (this.pick != null) ? this.pick.getGame() : null;
 		}
 
 		private Winner getWinner() { return this.winner; }
 
-		private void setPick( Pick pick )
+		private void setPick( IPick pick )
 		{
 			this.pick = pick;
 
 			updateView();
 
-			Team team = null;
+			ITeam team = null;
 
 			if( this.pick != null )
 			{
-				Game game = getGame();
-				team = (this.winner == Winner.AWAY) ?
+				IGame game = getGame();
+				team = (this.winner == AWAY) ?
 					game.getAwayTeam() : game.getHomeTeam();
 			}
 
@@ -164,7 +165,7 @@ public class PickUI implements ActionListener
 
 		private void updateView()
 		{
-			Game game = getGame();
+			IGame game = getGame();
 
 			setForeground((game != null && game.getWinner() == this.winner) ?
 				Color.red : Color.black);
@@ -181,23 +182,25 @@ public class PickUI implements ActionListener
 		{
 			public void setArmed( boolean b )
 			{
+/*
 				if( PickButton.this.pick != null &&
 					PickButton.this.pick.isComplete() )
 				{
 					return;
 				}
-
+*/
 				super.setArmed(b);
 			}
 
 			public boolean isArmed()
 			{
+/*
 				if( PickButton.this.pick != null &&
 					PickButton.this.pick.isComplete() )
 				{
 					return false;
 				}
-
+*/
 				return super.isArmed();
 			}
 

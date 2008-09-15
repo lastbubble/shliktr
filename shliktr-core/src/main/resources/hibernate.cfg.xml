@@ -16,12 +16,12 @@
 
 		<property name="show_sql">true</property>
 
-		<mapping class="org.lastbubble.shliktr.model.Player" />
-		<mapping class="org.lastbubble.shliktr.model.Team" />
-		<mapping class="org.lastbubble.shliktr.model.Game" />
-		<mapping class="org.lastbubble.shliktr.model.Week" />
-		<mapping class="org.lastbubble.shliktr.model.Pick" />
-		<mapping class="org.lastbubble.shliktr.model.Picks" />
+		<mapping class="org.lastbubble.shliktr.dao.Player" />
+		<mapping class="org.lastbubble.shliktr.dao.Team" />
+		<mapping class="org.lastbubble.shliktr.dao.Game" />
+		<mapping class="org.lastbubble.shliktr.dao.Week" />
+		<mapping class="org.lastbubble.shliktr.dao.Pick" />
+		<mapping class="org.lastbubble.shliktr.dao.PoolEntry" />
 
 	</session-factory>
 

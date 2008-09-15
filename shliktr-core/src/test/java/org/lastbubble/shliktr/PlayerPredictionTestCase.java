@@ -1,15 +1,17 @@
-package org.lastbubble.shliktr.model;
+package org.lastbubble.shliktr;
 
 import java.util.*;
 
 import junit.framework.TestCase;
+
+import static org.easymock.EasyMock.*;
 
 /**
  * @version $Id$
  */
 public class PlayerPredictionTestCase extends TestCase
 {
-	private static Player player = new Player();
+	private static IPlayer player = createMock(IPlayer.class);
 
 	private static int gameCnt = 3;
 

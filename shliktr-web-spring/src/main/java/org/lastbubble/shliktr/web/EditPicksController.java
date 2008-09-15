@@ -1,9 +1,9 @@
 package org.lastbubble.shliktr.web;
 
-import org.lastbubble.shliktr.model.Picks;
-import org.lastbubble.shliktr.model.Player;
-import org.lastbubble.shliktr.model.Week;
-import org.lastbubble.shliktr.model.Winner;
+import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IPoolEntry;
+import org.lastbubble.shliktr.IWeek;
+import org.lastbubble.shliktr.Winner;
 import org.lastbubble.shliktr.service.PoolService;
 
 import java.util.*;
@@ -30,11 +30,10 @@ public class EditPicksController extends SimpleFormController
 	public EditPicksController()
 	{
 		setCommandName("picks");
-		setCommandClass(Picks.class);
+		setCommandClass(IPoolEntry.class);
 		setFormView("editPicks");
 		setSuccessView("redirect:/app/viewPicks");
 	}
-
 
 
 	//-------------------------------------------------------------------------
@@ -81,14 +80,14 @@ public class EditPicksController extends SimpleFormController
 			catch( NumberFormatException e ) { }
 		}
 
-		Week week = this.poolService.findWeekById(weekId);
+		IWeek week = this.poolService.findWeekById(weekId);
 
 		if( week == null )
 		{
 			throw new IllegalArgumentException("Invalid week id: "+s);
 		}
 
-		Player player = WebUtils.getPlayerFromRequest(request);
+		IPlayer player = WebUtils.getPlayerFromRequest(request);
 
 		if( player == null || player.getUsername().equals("eric") )
 		{
@@ -117,28 +116,27 @@ public class EditPicksController extends SimpleFormController
 			throw new IllegalArgumentException("No player specified");
 		}
 
-		return this.poolService.findPicksForPlayer(week, player, true);
+		return this.poolService.findEntry(week, player, true);
 	}
 
 	@Override
 	protected ModelAndView onSubmit( Object command ) throws Exception
 	{
-		Picks picks = (Picks) command;
+		IPoolEntry entry = (IPoolEntry) command;
 
-		Integer weekId = picks.getWeek().getId();
+		Integer weekId = entry.getWeek().getWeekNumber();
 
 		Map model = new HashMap();
-		model.put("weekId", picks.getWeek().getId());
-		model.put("playerId", picks.getPlayer().getId());
+		model.put("weekId", weekId);
+		model.put("playerId", entry.getPlayer().getId());
 
 		if( this.poolService.acceptPicksForWeek(weekId) == false )
 		{
 			return new ModelAndView("viewPicks", model);
 		}
 
-		this.poolService.makePersistentPicks(picks);
+		this.poolService.saveEntry(entry);
 
 		return new ModelAndView(getSuccessView(), model);
 	}
-
-}	// End of EditPicksController
+}

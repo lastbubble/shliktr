@@ -1,8 +1,8 @@
 package org.lastbubble.shliktr.web;
 
-import org.lastbubble.shliktr.model.PickStats;
-import org.lastbubble.shliktr.model.Player;
-import org.lastbubble.shliktr.model.Week;
+import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IWeek;
+import org.lastbubble.shliktr.PickStats;
 
 import java.util.List;
 
@@ -19,10 +19,9 @@ public class ViewPickStatsController extends WeekController
 
 	@Override
 	protected ModelAndView handleWeek( ModelAndView modelAndView,
-		Week week, Player player )
+		IWeek week, IPlayer player )
 	{
 		List<PickStats> statsList = this.poolService.findPickStatsForWeek(week);
 		return modelAndView.addObject("statsList", statsList);
 	}
-
 }

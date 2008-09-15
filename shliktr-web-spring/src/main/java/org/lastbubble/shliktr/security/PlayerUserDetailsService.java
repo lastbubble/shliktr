@@ -1,6 +1,6 @@
 package org.lastbubble.shliktr.security;
 
-import org.lastbubble.shliktr.model.Player;
+import org.lastbubble.shliktr.IPlayer;
 import org.lastbubble.shliktr.service.PoolService;
 
 import org.acegisecurity.userdetails.UserDetails;
@@ -26,7 +26,7 @@ public class PlayerUserDetailsService implements UserDetailsService
 	// Methods
 	//---------------------------------------------------------------------------
 
-	protected String normalizeUsername( String username )
+	protected static String normalizeUsername( String username )
 	{
 		return username.toLowerCase().replace(' ', '_');
 	}
@@ -40,8 +40,8 @@ public class PlayerUserDetailsService implements UserDetailsService
 	public UserDetails loadUserByUsername( String username )
 	throws UsernameNotFoundException
 	{
-		Player player = this.poolService
-			.findPlayerByName(normalizeUsername(username));
+		IPlayer player = this.poolService
+			.findPlayerByUsername(normalizeUsername(username));
 
 		if( player == null )
 		{
@@ -51,4 +51,4 @@ public class PlayerUserDetailsService implements UserDetailsService
 		return new PlayerUserDetails(player);
 	}
 
-}	// End of PlayerUserDetailsService
+}

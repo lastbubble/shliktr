@@ -1,7 +1,7 @@
 package org.lastbubble.shliktr.web;
 
-import org.lastbubble.shliktr.model.Player;
-import org.lastbubble.shliktr.model.Week;
+import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IWeek;
 
 import java.util.Set;
 
@@ -23,11 +23,11 @@ public class ViewWeekController extends WeekController
 
 	@Override
 	protected ModelAndView handleWeek( ModelAndView modelAndView,
-		Week week, Player player )
+		IWeek week, IPlayer player )
 	{
 		modelAndView.addObject("weekIds", WEEK_IDS);
 
-		Set<Player> players = this.poolService.findPlayersForWeek(week);
+		Set<? extends IPlayer> players = this.poolService.findPlayersForWeek(week);
 
 		if( player != null )
 		{
@@ -44,5 +44,4 @@ public class ViewWeekController extends WeekController
 
 		return modelAndView;
 	}
-
 }

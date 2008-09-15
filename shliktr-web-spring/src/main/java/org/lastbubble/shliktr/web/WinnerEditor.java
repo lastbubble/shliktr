@@ -1,6 +1,7 @@
 package org.lastbubble.shliktr.web;
 
-import org.lastbubble.shliktr.model.Winner;
+import org.lastbubble.shliktr.Winner;
+import static org.lastbubble.shliktr.Winner.*;
 
 import java.beans.PropertyEditorSupport;
 
@@ -17,23 +18,21 @@ public class WinnerEditor extends PropertyEditorSupport
 		}
 		else if( text.equalsIgnoreCase("home") )
 		{
-			setValue(Winner.HOME);
+			setValue(HOME);
 		}
 		else if( text.equalsIgnoreCase("away") )
 		{
-			setValue(Winner.AWAY);
+			setValue(AWAY);
 		}
 		else
 		{
-			throw new IllegalArgumentException(
-				"Could not parse winner: " + text);
+			throw new IllegalArgumentException("Could not parse winner: "+text);
 		}
 	}
 
 	public String getAsText()
 	{
 		Winner winner = (Winner) getValue();
-		return (winner != null) ? winner.getValue() : "";
+		return (winner != null) ? winner.name().toLowerCase() : "";
 	}
-
-}	// End of WinnerEditor
+}

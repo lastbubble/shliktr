@@ -13,5 +13,4 @@ public class HomeController extends WeekController
 	{
 		setSupportedMethods( new String[] { METHOD_GET });
 	}
-
 }
