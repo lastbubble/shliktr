@@ -3,7 +3,6 @@ package org.lastbubble.shliktr.ui;
 import org.lastbubble.shliktr.IPick;
 import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.IWeek;
-import org.lastbubble.shliktr.PlayerScore;
 import org.lastbubble.shliktr.service.PoolService;
 
 import java.awt.BorderLayout;
@@ -149,8 +148,7 @@ public class PlayerPicksView extends JPanel implements View, DocumentListener
 		this.tiebreakerFld.setText(String.valueOf(this.entry.getTiebreaker()));
 		this.tiebreakerFld.getDocument().addDocumentListener(this);
 
-		this.scoreLbl.setText("Total score: "+
-			new PlayerScore(this.entry).getScore());
+		this.scoreLbl.setText("Total score: "+this.entry.getScore());
 
 		revalidate();
 		repaint();

@@ -1,8 +1,8 @@
 package org.lastbubble.shliktr.web;
 
 import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.IWeek;
-import org.lastbubble.shliktr.PlayerScore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,23 +29,24 @@ public class ViewResultsController extends WeekController
 				.findPlayersForWeek(week));
 		}
 
-		List<PlayerScore> scores = this.poolService.findScoresForWeek(week);
-		modelAndView.addObject("scores", scores);
+		List<? extends IPoolEntry> entries = this.poolService
+			.findEntriesForWeek(week);
+		modelAndView.addObject("scores", entries);
 
-		List<PlayerScore> closest = new ArrayList<PlayerScore>();
+		List<IPoolEntry> closest = new ArrayList<IPoolEntry>();
 
 		int min = Integer.MAX_VALUE;
-		for( PlayerScore score : scores )
+		for( IPoolEntry entry : entries )
 		{
-			if( score.getTiebreakerDiff() < min )
+			if( entry.getTiebreakerDiff() < min )
 			{
 				closest.clear();
-				closest.add(score);
-				min = score.getTiebreakerDiff();
+				closest.add(entry);
+				min = entry.getTiebreakerDiff();
 			}
-			else if( score.getTiebreakerDiff() == min )
+			else if( entry.getTiebreakerDiff() == min )
 			{
-				closest.add(score);
+				closest.add(entry);
 			}
 		}
 		modelAndView.addObject("closest", closest);

@@ -30,12 +30,16 @@ public class Pick extends PickBase
 
 	private Game game;
 
+	private PoolEntry entry;
+
 
 	//-------------------------------------------------------------------------
 	// Constructor
 	//-------------------------------------------------------------------------
 
 	Pick() { }
+
+	Pick( PoolEntry entry ) { this.entry = entry; }
 
 
 	//-------------------------------------------------------------------------
@@ -45,6 +49,10 @@ public class Pick extends PickBase
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	public Integer getId() { return this.id; }
 	void setId( Integer n ) { this.id = n; }
+
+	@ManyToOne(optional = false)
+	PoolEntry getEntry() { return this.entry; }
+	void setEntry( PoolEntry entry ) { this.entry = entry; }
 
 	@ManyToOne
 	@JoinColumn(nullable = false)

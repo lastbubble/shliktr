@@ -6,15 +6,16 @@ import org.lastbubble.shliktr.IPoolEntry;
 import java.util.*;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * A player's picks for a specified week's games. Includes the player's
@@ -23,29 +24,26 @@ import javax.persistence.Table;
  * @version $Id$
  */
 @Entity
-@Table(name = "picks")
-public class PoolEntry implements IPoolEntry, Comparable<IPoolEntry>
+@Table(name = "entry")
+public class PoolEntry implements IPoolEntry
 {
-	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer id;
 
-	@ManyToOne
-	@JoinColumn(nullable = false)
 	private Week week;
 
-	@ManyToOne
-	@JoinColumn(nullable = false)
 	private Player player;
 
-	@OneToMany(cascade = {CascadeType.ALL})
-	@JoinTable(
-		name = "picks_pick",
-		joinColumns = {@JoinColumn(name = "picks_id")},
-		inverseJoinColumns = @JoinColumn(name = "pick_id")
-	)
 	private List<Pick> picks;
 
 	private int tiebreaker;
+
+	private int score;
+
+	private int gamesWon;
+
+	private int gamesLost;
+
+	private int lost;
 
 
 	//-------------------------------------------------------------------------
@@ -54,36 +52,25 @@ public class PoolEntry implements IPoolEntry, Comparable<IPoolEntry>
 
 	PoolEntry() { }
 
-	PoolEntry( Week week, Player player, List<Pick> picks )
+	PoolEntry( Week week, Player player )
 	{
 		this.week = week;
 		this.player = player;
-		this.picks = picks;
-	}
-
-	public static PoolEntry createForPlayer( Week week, Player player )
-	{
-		PoolEntry entry = new PoolEntry();
-
-		entry.setWeek(week);
-		entry.setPlayer(player);
 
 		List<Game> games = week.getGames();
 
 		int cnt = games.size();
 
-		List<Pick> pickList = new ArrayList<Pick>(cnt);
+		List<Pick> picks = new ArrayList<Pick>(cnt);
 
 		for( int i = 0; i < cnt; i++ )
 		{
-			Pick pick = new Pick();
+			Pick pick = new Pick(this);
 			pick.setGame(games.get(i));
-			pickList.add(pick);
+			picks.add(pick);
 		}
 
-		entry.setPicks(pickList);
-
-		return entry;
+		this.picks = picks;
 	}
 
 
@@ -91,39 +78,106 @@ public class PoolEntry implements IPoolEntry, Comparable<IPoolEntry>
 	// Methods
 	//---------------------------------------------------------------------
 
-	public Integer getId() { return this.id; }
-
+	@Id @GeneratedValue(strategy = GenerationType.AUTO)
+	Integer getId() { return this.id; }
 	void setId( Integer n ) { this.id = n; }
 
+	/** @see	IPoolEntry#getWeek */
+	@ManyToOne
+	@JoinColumn(nullable = false)
 	public Week getWeek() { return this.week; }
-
 	void setWeek( Week w ) { this.week = w; }
 
+	/** @see	IPoolEntry#getPlayer */
+	@ManyToOne
+	@JoinColumn(nullable = false)
 	public Player getPlayer() { return this.player; }
-
 	void setPlayer( Player p ) { this.player = p; }
 
-	public List<? extends Pick> getPicks()
+	/** @see	IPoolEntry#getPicks */
+	@OneToMany(mappedBy="entry", cascade = {CascadeType.ALL})
+	public List<Pick> getPicks()
 	{
 		return Collections.unmodifiableList(this.picks);
 	}
-
 	void setPicks( List<Pick> l ) { this.picks = l; }
 
-	public int size() { return this.picks.size(); }
-
-	public Pick getPickAt( int i ) { return this.picks.get(i); }
-
+	/** @see	IPoolEntry#getTiebreaker */
+	@Column
 	public int getTiebreaker() { return this.tiebreaker; }
 
+	/** @see	IPoolEntry#setTiebreaker */
 	public void setTiebreaker( int n ) { this.tiebreaker = n; }
+
+	/** @see	IPoolEntry#computeScore */
+	public void computeScore()
+	{
+		this.score = 0;
+		this.lost = 0;
+		this.gamesWon = 0;
+		this.gamesLost = 0;
+
+		for( Pick pick : picks )
+		{
+			if( pick.getGame().getWinner() != null )
+			{
+				int ranking = pick.getRanking();
+				if( pick.isCorrect() )
+				{
+					this.score += ranking;
+					this.gamesWon++;
+				}
+				else
+				{
+					this.lost += ranking;
+					this.gamesLost++;
+				}
+			}
+		}
+	}
+
+	/** @see	IPoolEntry#getScore */
+	@Column
+	public int getScore() { return this.score; }
+	void setScore( Integer n ) { this.score = (n != null) ? n : 0; }
+
+	/** @see	IPoolEntry#getGamesWon */
+	@Column(name = "games_won")
+	public int getGamesWon() { return this.gamesWon; }
+	void setGamesWon( Integer n ) { this.gamesWon = (n != null) ? n : 0; }
+
+	/** @see	IPoolEntry#getGamesLost */
+	@Column(name = "games_lost")
+	public int getGamesLost() { return this.gamesLost; }
+	void setGamesLost( Integer n ) { this.gamesLost = (n != null) ? n : 0; }
+
+	/** @see	IPoolEntry#getLost */
+	@Column
+	public int getLost() { return this.lost; }
+	void setLost( Integer n ) { this.lost = (n != null) ? n : 0; }
+
+	/** @see	IPoolEntry#getRemaining */
+	@Transient
+	public int getRemaining()
+	{
+		int pickCnt = this.picks.size();
+		int total = (pickCnt * (pickCnt + 1)) / 2;
+		return total - getScore() - getLost();
+	}
+
+	/** @see	IPoolEntry#getTiebreakerDiff */
+	@Transient
+	public int getTiebreakerDiff()
+	{
+		return Math.abs(getTiebreaker() - getWeek().getTiebreakerAnswer());
+	}
 
 	/**
 	 * Validates the player's picks for the given week.
 	 */
 	public boolean validate( String[] errMsg )
 	{
-		int cnt = size();
+		int cnt = this.picks.size();
 
 		if( cnt != getWeek().getGames().size() )
 		{
@@ -196,12 +250,6 @@ public class PoolEntry implements IPoolEntry, Comparable<IPoolEntry>
 		}
 
 		return true;
-	}
-
-	/** Implements Comparable, so picks can be sorted by player. */
-	public int compareTo( IPoolEntry entry )
-	{
-		return getPlayer().compareTo(entry.getPlayer());
 	}
 
 	public int hashCode()

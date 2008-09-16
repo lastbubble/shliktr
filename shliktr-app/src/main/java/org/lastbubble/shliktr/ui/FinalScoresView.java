@@ -3,7 +3,6 @@ package org.lastbubble.shliktr.ui;
 import org.lastbubble.shliktr.IPlayer;
 import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.IWeek;
-import org.lastbubble.shliktr.PlayerScore;
 import org.lastbubble.shliktr.StringUtils;
 import org.lastbubble.shliktr.service.PoolService;
 
@@ -61,7 +60,6 @@ public class FinalScoresView implements View
 			scores.add(finalScore);
 		}
 
-		PlayerScore result;
 		for( int i = 1, last = week.getWeekNumber(); i <= last; i++ )
 		{
 			IWeek wk = this.poolService.findWeekById( new Integer(i));
@@ -69,11 +67,8 @@ public class FinalScoresView implements View
 			for( Iterator j = scores.iterator(); j.hasNext(); )
 			{
 				finalScore = (FinalScore) j.next();
-				result = new PlayerScore(this.poolService
-					.findEntry(wk, finalScore.getPlayer(), true)
-				);
-
-				finalScore.addScore(i, result.getScore());
+				entry = this.poolService.findEntry(wk, finalScore.getPlayer(), true);
+				finalScore.addScore(i, entry.getScore());
 			}
 		}
 

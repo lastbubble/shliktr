@@ -5,7 +5,6 @@ import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.PickStats;
 import org.lastbubble.shliktr.PlayerPrediction;
-import org.lastbubble.shliktr.PlayerScore;
 import org.lastbubble.shliktr.Winner;
 
 import java.util.List;
@@ -34,8 +33,6 @@ public interface PoolService
 	IPlayer findPlayerByUsername( String username );
 
 	List<? extends IPoolEntry> findEntriesForWeek( IWeek week );
-
-	List<PlayerScore> findScoresForWeek( IWeek week );
 
 	List<PickStats> findPickStatsForWeek( IWeek week );
 

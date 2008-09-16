@@ -6,7 +6,6 @@ import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.ITeam;
 import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.PlayerPrediction;
-import org.lastbubble.shliktr.PlayerScore;
 import org.lastbubble.shliktr.StringUtils;
 import org.lastbubble.shliktr.Winner;
 import org.lastbubble.shliktr.service.PoolService;
@@ -255,14 +254,12 @@ implements View, ActionListener, ChangeListener, DocumentListener
 		List<? extends IPoolEntry> entries = this.poolService
 			.findEntriesForWeek(this.week);
 
-		List<PlayerScore> results = new ArrayList<PlayerScore>(entries.size());
-
 		for( IPoolEntry entry : entries )
 		{
-			results.add( new PlayerScore(entry));
+			entry.computeScore();
 		}
 
-		Collections.sort(results);
+		Collections.sort(entries, IPoolEntry.COMPARE_SCORE);
 
 		StringBuffer buf = new StringBuffer();
 
@@ -279,20 +276,27 @@ implements View, ActionListener, ChangeListener, DocumentListener
 		buf.append(StringUtils.pad("TIE", 3, true));
 		buf.append('\n');
 
-		for( PlayerScore result : results )
+		for( IPoolEntry entry : entries )
 		{
 			buf.append(
-				StringUtils.pad(result.getPlayer().getName(), 12, false));
+				StringUtils.pad(entry.getPlayer().getName(), 12, false));
 			buf.append(' ');
-			buf.append(StringUtils.pad(result.getScore(), 5, true));
+			buf.append(StringUtils.pad(entry.getScore(), 5, true));
 			buf.append(' ');
-			buf.append(StringUtils.pad(result.getRecord(), 4, true));
+
+			String record = new StringBuilder()
+				.append(entry.getGamesWon())
+				.append('-')
+				.append(entry.getGamesLost())
+				.toString();
+
+			buf.append(StringUtils.pad(record, 4, true));
 			buf.append(' ');
-			buf.append(StringUtils.pad(result.getLost(), 4, true));
+			buf.append(StringUtils.pad(entry.getLost(), 4, true));
 			buf.append(' ');
-			buf.append(StringUtils.pad(result.getRemaining(), 4, true));
+			buf.append(StringUtils.pad(entry.getRemaining(), 4, true));
 			buf.append(' ');
-			buf.append(StringUtils.pad(result.getTiebreakerDiff(), 3, true));
+			buf.append(StringUtils.pad(entry.getTiebreakerDiff(), 3, true));
 			buf.append('\n');
 		}
 
@@ -439,18 +443,6 @@ implements View, ActionListener, ChangeListener, DocumentListener
 		dlg.pack();
 		dlg.show();
 	}
-
-	private static class ResultComparator implements Comparator
-	{
-		public int compare( Object o1, Object o2 )
-		{
-			PlayerScore a = (PlayerScore) o1;
-			PlayerScore b = (PlayerScore) o2;
-
-			return (b.getScore() - a.getScore());
-		}
-
-	}	// End of ResultComparator
 
 	private void showForm()
 	{

@@ -3,7 +3,6 @@ package org.lastbubble.shliktr.ui;
 import org.lastbubble.shliktr.IPlayer;
 import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.IWeek;
-import org.lastbubble.shliktr.PlayerScore;
 import org.lastbubble.shliktr.service.PoolService;
 
 import java.awt.*;

@@ -6,7 +6,6 @@ import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.PickStats;
 import org.lastbubble.shliktr.PlayerPrediction;
-import org.lastbubble.shliktr.PlayerScore;
 import org.lastbubble.shliktr.Winner;
 import org.lastbubble.shliktr.service.PoolService;
 
@@ -110,24 +109,6 @@ public class PoolServiceDaoImpl implements PoolService
 		return entries;
 	}
 
-	/** @see	PoolService#findScoresForWeek */
-	@Transactional(readOnly = true)
-	public List<PlayerScore> findScoresForWeek( IWeek week )
-	{
-		List<? extends IPoolEntry> entries = this.dao.findEntriesForWeek(week);
-
-		List<PlayerScore> scores = new ArrayList<PlayerScore>(entries.size());
-
-		for( IPoolEntry entry : entries )
-		{
-			scores.add( new PlayerScore(entry));
-		}
-
-		Collections.sort(scores);
-
-		return scores;
-	}
-
 	/** @see	PoolService#findPickStatsForWeek */
 	@Transactional(readOnly = false)
 	public List<PickStats> findPickStatsForWeek( IWeek week )
@@ -143,7 +124,7 @@ public class PoolServiceDaoImpl implements PoolService
 
 		if( entry == null && create )
 		{
-			entry = PoolEntry.createForPlayer(
+			entry = new PoolEntry(
 				this.dao.findWeekById(week.getWeekNumber()),
 				this.dao.findPlayerByUsername(player.getUsername())
 			);
@@ -154,7 +135,7 @@ public class PoolServiceDaoImpl implements PoolService
 		{
 			entry.getPlayer();
 			entry.getWeek();
-			entry.size();
+			entry.getPicks().size();
 		}
 
 		return entry;
@@ -224,8 +205,6 @@ public class PoolServiceDaoImpl implements PoolService
 
 		List<? extends IPoolEntry> entries = this.dao.findEntriesForWeek(week);
 
-		List<PlayerScore> playerScores = new ArrayList<PlayerScore>();
-
 		StringBuilder outcomeBuf = new StringBuilder(unfinishedCnt);
 
 		for( int i = 0, max = (int) Math.pow(2, unfinishedCnt); i < max; i++ )
@@ -253,26 +232,24 @@ public class PoolServiceDaoImpl implements PoolService
 				}
 			}
 
-			playerScores.clear();
-
 			for( IPoolEntry entry : entries )
 			{
-				playerScores.add( new PlayerScore(entry));
+				entry.computeScore();
 			}
 
-			Collections.sort(playerScores, new ScoreComparator());
+			Collections.sort(entries, IPoolEntry.COMPARE_SCORE);
 
-			int winningScore = playerScores.get(0).getScore();
-			if( winningScore == playerScores.get(1).getScore() )
+			int winningScore = entries.get(0).getScore();
+			if( winningScore == entries.get(1).getScore() )
 			{
 				outcome += "*";
 			}
 
-			for( PlayerScore playerScore : playerScores )
+			for( IPoolEntry entry : entries )
 			{
-				if( playerScore.getScore() != winningScore ) break;
+				if( entry.getScore() != winningScore ) break;
 
-				IPlayer winner = playerScore.getPlayer();
+				IPlayer winner = entry.getPlayer();
 
 				PlayerPrediction prediction = predictions.get(winner);
 				if( prediction == null )
@@ -289,19 +266,5 @@ public class PoolServiceDaoImpl implements PoolService
 			this.dao.refreshGamesForWeek((Week) week);
 
 		return predictions;
-	}
-
-
-	//---------------------------------------------------------------------------
-	// Nested top-level class ScoreComparator
-	//---------------------------------------------------------------------------
-
-	private static class ScoreComparator implements Comparator<PlayerScore>
-	{
-		/** Implements Comparator<PlayerScore> */
-		public int compare( PlayerScore a, PlayerScore b )
-		{
-			return b.getScore() - a.getScore();
-		}
 	}
 }
