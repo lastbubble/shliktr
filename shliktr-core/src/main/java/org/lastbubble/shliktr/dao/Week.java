@@ -68,7 +68,10 @@ public final class Week implements IWeek
 	public int getTiebreakerAnswer() { return this.tiebreakerAnswer; }
 
 	/** @see	IWeek#setTiebreakerAnswer */
-	public void setTiebreakerAnswer( int n ) { this.tiebreakerAnswer = n; }
+	public void setTiebreakerAnswer( Integer n )
+	{
+		this.tiebreakerAnswer = (n != null) ? n : 0;
+	}
 
 
 	//---------------------------------------------------------------------------

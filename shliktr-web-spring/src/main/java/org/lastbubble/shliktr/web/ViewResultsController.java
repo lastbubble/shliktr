@@ -5,6 +5,7 @@ import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.IWeek;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.web.servlet.ModelAndView;
@@ -31,7 +32,10 @@ public class ViewResultsController extends WeekController
 
 		List<? extends IPoolEntry> entries = this.poolService
 			.findEntriesForWeek(week);
-		modelAndView.addObject("scores", entries);
+
+		Collections.sort(entries, IPoolEntry.COMPARE_SCORE);
+
+		modelAndView.addObject("entries", entries);
 
 		List<IPoolEntry> closest = new ArrayList<IPoolEntry>();
 

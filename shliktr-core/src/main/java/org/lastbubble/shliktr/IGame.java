@@ -13,11 +13,11 @@ public interface IGame
 
 	int getHomeScore();
 
-	void setHomeScore( int n );
+	void setHomeScore( Integer n );
 
 	int getAwayScore();
 
-	void setAwayScore( int n );
+	void setAwayScore( Integer n );
 
 	Date getPlayedOn();
 

@@ -72,7 +72,10 @@ public class PlayerImpl implements IPlayer, Comparable<IPlayer>
 	/** @see	IPlayer#isActive */
 	public boolean isActive() { return this.active; }
 
-	protected void setActive( boolean b ) { this.active = b; }
+	protected void setActive( Boolean b )
+	{
+		this.active = (b != null) ? b : false;
+	}
 
 
 	//---------------------------------------------------------------------------

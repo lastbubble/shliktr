@@ -1,5 +1,6 @@
 package org.lastbubble.shliktr.web;
 
+import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.service.PoolService;
 
@@ -83,6 +84,14 @@ public class EditWeekController extends SimpleFormController
 		IWeek week = (IWeek) command;
 
 		this.poolService.saveWeek(week);
+
+		List<? extends IPoolEntry> entries = this.poolService
+			.findEntriesForWeek(week);
+		for( IPoolEntry entry : entries )
+		{
+			entry.computeScore();
+			this.poolService.saveEntry(entry);
+		}
 
 		ModelAndView mv = new ModelAndView(getSuccessView());
 		mv.addObject("weekId", week.getWeekNumber());

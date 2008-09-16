@@ -17,5 +17,5 @@ public interface IWeek
 
 	int getTiebreakerAnswer();
 
-	void setTiebreakerAnswer( int n );
+	void setTiebreakerAnswer( Integer n );
 }
