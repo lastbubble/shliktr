@@ -32,6 +32,8 @@ public interface IPoolEntry
 
 	int getTiebreakerDiff();
 
+	boolean validate( String[] errmsg );
+
 	public static final Comparator<IPoolEntry> COMPARE_SCORE =
 		new Comparator<IPoolEntry>() {
 			public int compare( IPoolEntry entry1, IPoolEntry entry2 )

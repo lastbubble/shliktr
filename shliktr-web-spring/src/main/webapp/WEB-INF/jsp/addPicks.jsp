@@ -15,6 +15,12 @@
 
   <h1>Adding picks for week ${week.id}</h1>
 
+  <c:if test="${errorMsg != null}">
+    <div>
+      <span class="error">${errorMsg}</span>
+    </div>
+  </c:if>
+
   <spring-form:form commandName="newPicks" method="post">
   <spring-form:select path="playerId">
     <c:forEach items="${players}" var="player">

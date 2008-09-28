@@ -135,8 +135,24 @@ public class EditPicksController extends SimpleFormController
 			return new ModelAndView("viewPicks", model);
 		}
 
-		this.poolService.saveEntry(entry);
+		ModelAndView mv;
 
-		return new ModelAndView(getSuccessView(), model);
+		String[] errmsg = new String[1];
+
+		if( entry.validate(errmsg) )
+		{
+			this.poolService.saveEntry(entry);
+
+			mv = new ModelAndView(getSuccessView(), model);
+		}
+		else
+		{
+			mv = new ModelAndView(getFormView(), model);
+
+			mv.addObject("picks", entry);
+			mv.addObject("errorMsg", errmsg[0]);
+		}
+
+		return mv;
 	}
 }

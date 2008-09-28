@@ -181,32 +181,20 @@ public class PoolEntry implements IPoolEntry
 
 		if( cnt != getWeek().getGames().size() )
 		{
-			String s = getPlayer()+" has wrong number of picks";
-			System.err.println(s);
-			if( errMsg != null ) errMsg[0] = s;
+			if( errMsg != null )
+			{
+				errMsg[0] = getPlayer()+" has wrong number of picks";
+			}
 			return false;
 		}
 
-		// create an array of the player's picks for the week
+		// sort the picks by ranking (ascending)
 
-		List<Pick> sortedPicks = new ArrayList<Pick>(cnt);
-		sortedPicks.addAll(this.picks);
-
-		// sort the array of picks by ranking (in ascending order)
-
-		Collections.sort(sortedPicks, new Comparator<Pick>() {
-			public int compare( Pick p1, Pick p2 )
-			{
-				int ranking1 = Math.max(0, p1.getRanking());
-				int ranking2 = Math.max(0, p2.getRanking());
-				return ranking1 - ranking2;
-			}
-		});
+		List<Pick> sortedPicks = new ArrayList<Pick>(this.picks);
+		Collections.sort(sortedPicks, IPick.COMPARE_RANKING);
 
 		// verify that each pick's ranking is valid;
 		// the list of rankings should be {1, 2, 3, ..., cnt}
-
-		boolean foundInvalid = false;
 
 		for( int i = 0; i < cnt; i++ )
 		{
@@ -220,32 +208,21 @@ public class PoolEntry implements IPoolEntry
 			// weekly score that is higher than the possible (which is not
 			// fair). this is a fatal error for validation
 			{
-				String s = getPlayer()+" has illegal ranking for "+pick;
-				System.err.println(s);
-				if( errMsg != null ) errMsg[0] = s;
+				if( errMsg != null )
+				{
+					errMsg[0] = getPlayer() + " has illegal ranking for " + pick;
+				}
 				return false;
 			}
 			else if( ranking != (i + 1) )
 			// if the ranking is not what we would expect, then it's too low
 			// (which is certainly legal)
 			{
-				String s = getPlayer()+" has invalid ranking for "+pick;
-
-				if( foundInvalid == false )
-				// only print the first occurrence, since if the player missed
-				// a ranking, it would have a cascading effect for subsequent
-				// picks' rankings
-				{
-					System.err.println(s);
-					foundInvalid = true;
-				}
-
 				if( errMsg != null )
-				// immediately show validation error to user by returning
 				{
-					errMsg[0] = s;
-					return false;
+					errMsg[0] = getPlayer() + " has invalid ranking for " + pick;
 				}
+				return false;
 			}
 		}
 

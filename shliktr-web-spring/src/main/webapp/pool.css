@@ -2,6 +2,11 @@ body {
 	font-family: sans-serif;
 }
 
+.error {
+	color: red;
+	font-weight: bold;
+}
+
 .winningTeam {
 	background-color: pink;
 	font-weight: bold;

@@ -17,6 +17,12 @@
 
   <%@ include file="/WEB-INF/jsp/welcome.jsp" %>
 
+  <c:if test="${errorMsg != null}">
+    <div>
+      <span class="error">${errorMsg}</span>
+    </div>
+  </c:if>
+
   <spring-form:form commandName="picks" method="post">
   <input type="hidden" name="weekId" value="${picks.week.id}" />
   <input type="hidden" name="playerId" value="${picks.player.id}" />

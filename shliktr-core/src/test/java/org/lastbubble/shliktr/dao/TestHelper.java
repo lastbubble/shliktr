@@ -42,6 +42,11 @@ public final class TestHelper
 		return week;
 	}
 
+	public static Player newPlayer()
+	{
+		return new Player("player");
+	}
+
 	public static Pick newPick( Game game, Winner winner, int ranking )
 	{
 		Pick pick = new Pick();

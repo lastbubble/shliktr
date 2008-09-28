@@ -152,9 +152,26 @@ public class AddPicksController extends SimpleFormController
 
 		entry.setTiebreaker(picksForm.getTiebreaker());
 
-		this.poolService.saveEntry(entry);
+		ModelAndView mv;
 
-		ModelAndView mv = new ModelAndView(getSuccessView());
+		String[] errmsg = new String[1];
+
+		if( entry.validate(errmsg) )
+		{
+			this.poolService.saveEntry(entry);
+
+			mv = new ModelAndView(getSuccessView());
+		}
+		else
+		{
+			mv = new ModelAndView(getFormView());
+
+			mv.addObject("week", week);
+			mv.addObject("players", Collections.singletonList(player));
+			mv.addObject("newPicks", picksForm);
+			mv.addObject("errorMsg", errmsg[0]);
+		}
+
 		mv.addObject("weekId", week.getWeekNumber());
 		mv.addObject("playerId", player.getId());
 
