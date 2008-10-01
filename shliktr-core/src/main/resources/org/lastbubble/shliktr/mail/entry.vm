@@ -1,0 +1,20 @@
+${entry.player.name},<br />
+
+Here are your picks for week ${entry.week.weekNumber}:<br /><br />
+
+<table>
+<tr><th>Game</th><th>Pick</th><th>Ranking</th></tr>
+#foreach( $pick in ${entry.picks} )
+<tr>
+  <td>${pick.game.awayTeam.location} at ${pick.game.homeTeam.location}</td>
+  <td><b>${pick.team.location}</b></td>
+  <td align="right"><b>${pick.ranking}</b></td>
+</tr>
+#end
+</table><br />
+
+Tiebreaker:<br />
+${entry.week.tiebreaker} ${entry.tiebreaker}<br /><br />
+
+Thanks for playing!<br />
+-Eric

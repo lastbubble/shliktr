@@ -29,6 +29,8 @@ public final class Main
 		System.err.println("  Main dump <weekNumber> [<file>]");
 		System.err.println("    or");
 		System.err.println("  Main load <file>");
+		System.err.println("    or");
+		System.err.println("  Main mail <username> <weekNumber");
 		System.exit(1);
 	}
 
@@ -45,7 +47,10 @@ public final class Main
 	public Main()
 	{
 		this.beanFactory = new ClassPathXmlApplicationContext( new String[] {
-				"dataConfig.xml", "applicationContext.xml", "tools-config.xml"
+				"dataConfig.xml",
+				"mailConfig.xml",
+				"applicationContext.xml",
+				"tools-config.xml"
 			}
 		);
 	}
@@ -74,6 +79,10 @@ public final class Main
 		else if( sCommand.equals("load") )
 		{
 			load(commandArgs);
+		}
+		else if( sCommand.equals("mail") )
+		{
+			mail(commandArgs);
 		}
 		else
 		{
@@ -120,5 +129,20 @@ public final class Main
 		PoolLoader loader = (PoolLoader) this.beanFactory.getBean("loader");
 
 		loader.load(reader);
+	}
+
+	public void mail( String[] args ) throws Exception
+	{
+		if( args.length < 2 ) usage();
+
+		String username = args[0];
+
+		int weekNumber = 0;
+		try { weekNumber = Integer.parseInt(args[1]); }
+		catch( NumberFormatException e ) { usage(); }
+
+		PoolMailer mailer = (PoolMailer) this.beanFactory.getBean("mailer");
+
+		mailer.mail(username, weekNumber);
 	}
 }

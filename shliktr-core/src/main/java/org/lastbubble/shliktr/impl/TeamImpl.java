@@ -43,12 +43,12 @@ public class TeamImpl implements ITeam, Comparable<ITeam>
 		this.abbr = norm;
 	}
 
-	/** @see	ITeam#getAbbr */
+	/** @see	ITeam#getLocation */
 	public String getLocation() { return this.location; }
 
 	protected void setLocation( String s ) { this.location = s; }
 
-	/** @see	ITeam#getAbbr */
+	/** @see	ITeam#getName */
 	public String getName() { return this.name; }
 
 	protected void setName( String s ) { this.name = s; }

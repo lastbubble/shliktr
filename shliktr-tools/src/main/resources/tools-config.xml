@@ -13,4 +13,9 @@
 	      class="org.lastbubble.shliktr.tools.PoolLoader"
 	      p:poolService-ref="poolService" />
 
+	<bean id="mailer"
+	      class="org.lastbubble.shliktr.tools.PoolMailer"
+	      p:poolService-ref="poolService"
+	      p:poolMailer-ref="poolMailer" />
+
 </beans>
