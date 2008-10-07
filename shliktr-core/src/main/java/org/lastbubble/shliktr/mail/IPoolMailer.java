@@ -7,5 +7,7 @@ import org.lastbubble.shliktr.IPoolEntry;
  */
 public interface IPoolMailer
 {
+	boolean isEnabled();
+
 	void mailEntry( IPoolEntry entry ) throws Exception;
 }

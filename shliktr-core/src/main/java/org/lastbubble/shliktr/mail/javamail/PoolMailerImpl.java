@@ -15,6 +15,8 @@ import org.springframework.mail.javamail.MimeMessagePreparator;
  */
 public class PoolMailerImpl implements IPoolMailer
 {
+	private boolean enabled;
+
 	private IMessageFactory messageFactory;
 
 	private JavaMailSender mailSender;
@@ -25,6 +27,8 @@ public class PoolMailerImpl implements IPoolMailer
 	//---------------------------------------------------------------------------
 	// Properties
 	//---------------------------------------------------------------------------
+
+	public void setEnabled( boolean b ) { this.enabled = b; }
 
 	public void setMessageFactory( IMessageFactory messageFactory )
 	{
@@ -42,6 +46,9 @@ public class PoolMailerImpl implements IPoolMailer
 	//---------------------------------------------------------------------------
 	// Implements IPoolMailer
 	//---------------------------------------------------------------------------
+
+	/** @see	IPoolMailer#isEnabled */
+	public boolean isEnabled() { return this.enabled; }
 
 	/** @see	IPoolMailer#mailEntry */
 	public void mailEntry( IPoolEntry entry ) throws Exception

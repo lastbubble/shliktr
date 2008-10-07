@@ -5,7 +5,7 @@ create table entry (
     games_won integer,
     lost integer,
     score integer,
-    tiebreaker integer,
+    tiebreaker integer not null default 0,
     player_id integer not null,
     week_id integer not null,
     primary key (id)
@@ -13,8 +13,8 @@ create table entry (
 
 create table game (
     id integer not null auto_increment,
-    away_score integer,
-    home_score integer,
+    away_score integer not null default 0,
+    home_score integer not null default 0,
     played_on datetime not null,
     away_team_id integer not null,
     home_team_id integer not null,

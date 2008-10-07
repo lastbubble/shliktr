@@ -64,7 +64,15 @@ public class MessageFactoryImplTestCase extends TestCase
 		assertTrue(message.indexOf("<b>C</b>") > -1);
 		assertTrue(message.indexOf("E at F") > -1);
 		assertTrue(message.indexOf("<b>F</b>") > -1);
-		assertTrue(message.indexOf(tiebreakerQuestion+" "+tiebreakerGuess) > 1);
+
+		String s = new StringBuilder()
+			.append(tiebreakerQuestion)
+			.append(' ')
+			.append("<b>")
+			.append(tiebreakerGuess)
+			.append("</b>")
+			.toString();
+		assertTrue(message.indexOf(s) > -1);
 	}
 
 

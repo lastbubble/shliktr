@@ -14,7 +14,7 @@ Here are your picks for week ${entry.week.weekNumber}:<br /><br />
 </table><br />
 
 Tiebreaker:<br />
-${entry.week.tiebreaker} ${entry.tiebreaker}<br /><br />
+${entry.week.tiebreaker} <b>${entry.tiebreaker}</b><br /><br />
 
 Thanks for playing!<br />
 -Eric

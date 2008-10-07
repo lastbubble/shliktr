@@ -4,6 +4,7 @@ import org.lastbubble.shliktr.IPlayer;
 import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.Winner;
+import org.lastbubble.shliktr.mail.IPoolMailer;
 import org.lastbubble.shliktr.service.PoolService;
 
 import java.util.*;
@@ -21,6 +22,8 @@ import org.springframework.web.servlet.mvc.SimpleFormController;
 public class EditPicksController extends SimpleFormController
 {
 	private PoolService poolService;
+
+	private IPoolMailer poolMailer;
 
 
 	//-------------------------------------------------------------------------
@@ -41,6 +44,8 @@ public class EditPicksController extends SimpleFormController
 	//-------------------------------------------------------------------------
 
 	public void setPoolService( PoolService ps ) { this.poolService = ps; }
+
+	public void setPoolMailer( IPoolMailer pm ) { this.poolMailer = pm; }
 
 
 	//-------------------------------------------------------------------------
@@ -144,6 +149,11 @@ public class EditPicksController extends SimpleFormController
 			this.poolService.saveEntry(entry);
 
 			mv = new ModelAndView(getSuccessView(), model);
+
+			if( this.poolMailer != null && this.poolMailer.isEnabled() )
+			{
+				this.poolMailer.mailEntry(entry);
+			}
 		}
 		else
 		{

@@ -85,20 +85,14 @@ public final class Game implements IGame
 	public int getHomeScore() { return this.homeScore; }
 
 	/** @see	IGame#setHomeScore */
-	public void setHomeScore( Integer n )
-	{
-		this.homeScore = (n != null) ? n : 0;
-	}
+	public void setHomeScore( int n ) { this.homeScore = n; }
 
 	/** @see	IGame#getAwayScore */
 	@Column(name = "away_score")
 	public int getAwayScore() { return this.awayScore; }
 
 	/** @see	IGame#setAwayScore */
-	public void setAwayScore( Integer n )
-	{
-		this.awayScore = (n != null) ? n : 0;
-	}
+	public void setAwayScore( int n ) { this.awayScore = n; }
 
 	/** @see	IGame#getPlayedOn */
 	@Column(name="played_on", nullable = false)
