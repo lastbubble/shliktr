@@ -103,5 +103,28 @@
 				</dependencies>
 			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 	</build>
+	<properties>
+		<shliktr.home>${env.SHLIKTR_HOME}</shliktr.home> 
+	</properties>
+	<profiles>
+		<profile>
+			<id>production</id>
+			<activation>
+				<property>
+					<name>deploy</name>
+					<value>prod</value>
+				</property>
+			</activation>
+			<properties>
+				<shliktr.home>/home/apps/shliktr</shliktr.home> 
+			</properties>
+		</profile>
+	</profiles>
 </project>

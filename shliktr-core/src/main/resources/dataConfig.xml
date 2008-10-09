@@ -5,14 +5,14 @@
        xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-	<bean class="org.springframework.beans.factory.config.PropertyOverrideConfigurer"
-	      p:location="classpath:shliktr.properties" />
-
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-		<description>
-			This bean expects to be configured through the shliktr.properties file,
-			with the PropertyOverrideConfigurer above.
-		</description>
-	</bean>
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+	      p:driverClassName="${db.driverClassName}"
+	      p:url="${db.url}"
+	      p:username="${db.username}"
+	      p:password="${db.password}"
+	      p:testOnBorrow="${db.testOnBorrow}"
+	      p:validationQuery="${db.validationQuery}"
+	      p:minEvictableIdleTimeMillis="${db.minEvictableIdleTimeMillis}"
+	      p:timeBetweenEvictionRunsMillis="${db.timeBetweenEvictionRunsMillis}" />
 
 </beans>

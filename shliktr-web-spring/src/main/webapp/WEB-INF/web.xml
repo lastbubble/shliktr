@@ -10,8 +10,10 @@
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
-			/WEB-INF/dataConfig.xml
+			classpath:dataConfig.xml
+			classpath:mailConfig.xml
 			classpath:applicationContext.xml
+			classpath:propertyConfig.xml
 			/WEB-INF/pool-security.xml
 		</param-value>
 	</context-param>

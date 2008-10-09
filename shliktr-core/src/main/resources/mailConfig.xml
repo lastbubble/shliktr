@@ -9,16 +9,16 @@
 	      class="org.lastbubble.shliktr.mail.MessageFactoryImpl" />
 
 	<bean id="mailSender"
-	      class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<description>
-			This bean expects to be configured through the mail.properties file,
-			with the PropertyOverrideConfigurer above.
-		</description>
-	</bean>
+	      class="org.springframework.mail.javamail.JavaMailSenderImpl"
+	      p:host="${mail.host}"
+	      p:username="${mail.username}"
+	      p:password="${mail.password}" />
 
 	<bean id="poolMailer"
 	      class="org.lastbubble.shliktr.mail.javamail.PoolMailerImpl"
 	      p:messageFactory-ref="messageFactory"
-	      p:mailSender-ref="mailSender" />
+	      p:mailSender-ref="mailSender"
+	      p:enabled="${mail.enabled}"
+	      p:fromAddress="${mail.fromAddress}" />
 
 </beans>

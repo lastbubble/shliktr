@@ -7,6 +7,31 @@
 	       xmlns:p="http://www.springframework.org/schema/p"
 	       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+	      p:location="classpath:shliktr.properties"
+	      p:order="10">
+		<description>
+			Load default properties
+		</description>
+		<property name="properties">
+			<props>
+				<prop key="db.driverClassName" />
+				<prop key="db.url" />
+				<prop key="db.username" />
+				<prop key="db.password" />
+				<prop key="db.testOnBorrow">false</prop>
+				<prop key="db.validationQuery"></prop>
+				<prop key="db.minEvictableIdleTimeMillis">1800000</prop>
+				<prop key="db.timeBetweenEvictionRunsMillis">7200000</prop>
+				<prop key="mail.host" />
+				<prop key="mail.username" />
+				<prop key="mail.password" />
+				<prop key="mail.enabled">false</prop>
+				<prop key="mail.fromAddress" />
+			</props>
+		</property>
+	</bean>
+
 	<bean id="poolDao"
 	      class="org.lastbubble.shliktr.dao.hibernate.PoolDaoHibernate">
 		<constructor-arg ref="sessionFactory" />

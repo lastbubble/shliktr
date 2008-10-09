@@ -5,9 +5,10 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
 
-	<bean class="org.springframework.beans.factory.config.PropertyOverrideConfigurer"
-	      p:location="file:mail.properties"
-	      p:ignoreResourceNotFound="true" />
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+	      p:location="file:shliktr.properties"
+	      p:order="0"
+	      p:ignoreUnresolvablePlaceholders="true" />
 
 	<bean id="dumper"
 	      class="org.lastbubble.shliktr.tools.PoolDumper"
