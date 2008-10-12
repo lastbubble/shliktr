@@ -2,20 +2,25 @@ package org.lastbubble.shliktr.dao;
 
 import org.lastbubble.shliktr.IPick;
 import org.lastbubble.shliktr.IPoolEntry;
+import org.lastbubble.shliktr.PoolResult;
+import org.lastbubble.shliktr.Score;
 
 import java.util.*;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  * A player's picks for a specified week's games. Includes the player's
@@ -25,6 +30,19 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(name = "entry")
+@NamedQuery(
+	name="entry.findResultsForWeek",
+	query="select new org.lastbubble.shliktr.PoolResult("
+		+"w.id, "
+		+"e.player, "
+		+"e.score, "
+		+"w.games.size, "
+		+"e.tiebreaker, "
+		+"abs(w.tiebreakerAnswer - e.tiebreaker)"
+		+") "
+		+"from PoolEntry as e join e.week as w "
+		+"where w.id = :week"
+)
 public class PoolEntry implements IPoolEntry
 {
 	private Integer id;
@@ -37,13 +55,7 @@ public class PoolEntry implements IPoolEntry
 
 	private int tiebreaker;
 
-	private int score;
-
-	private int gamesWon;
-
-	private int gamesLost;
-
-	private int lost;
+	private Score score = new Score();
 
 
 	//-------------------------------------------------------------------------
@@ -109,67 +121,49 @@ public class PoolEntry implements IPoolEntry
 	/** @see	IPoolEntry#setTiebreaker */
 	public void setTiebreaker( int n ) { this.tiebreaker = n; }
 
-	/** @see	IPoolEntry#computeScore */
-	public void computeScore()
+	@Embedded
+	@AttributeOverrides( {
+			@AttributeOverride(name="points", column = @Column(name="score")),
+			@AttributeOverride(name="gamesWon", column = @Column(name="games_won")),
+			@AttributeOverride(name="gamesLost", column = @Column(name="games_lost")),
+			@AttributeOverride(name="pointsLost", column = @Column(name="lost"))
+		}
+	)
+	Score getScore() { return this.score; }
+	void setScore( Score score ) { this.score = score; }
+
+	/** @see	IPoolEntry#computeResult */
+	public PoolResult computeResult()
 	{
-		this.score = 0;
-		this.lost = 0;
-		this.gamesWon = 0;
-		this.gamesLost = 0;
+		return new PoolResult(
+			this.week.getWeekNumber(),
+			this.player,
+			computeScore(),
+			this.week.getGames().size(),
+			this.tiebreaker,
+			Math.abs(week.getTiebreakerAnswer() - this.tiebreaker)
+		);
+	}
+
+	/** @see	IPoolEntry#updateScore */
+	public void updateScore()
+	{
+		this.score = computeScore();
+	}
+
+	private Score computeScore()
+	{
+		Score score = new Score();
 
 		for( Pick pick : picks )
 		{
 			if( pick.getGame().getWinner() != null )
 			{
-				int ranking = pick.getRanking();
-				if( pick.isCorrect() )
-				{
-					this.score += ranking;
-					this.gamesWon++;
-				}
-				else
-				{
-					this.lost += ranking;
-					this.gamesLost++;
-				}
+				score.add(pick);
 			}
 		}
-	}
 
-	/** @see	IPoolEntry#getScore */
-	@Column
-	public int getScore() { return this.score; }
-	void setScore( Integer n ) { this.score = (n != null) ? n : 0; }
-
-	/** @see	IPoolEntry#getGamesWon */
-	@Column(name = "games_won")
-	public int getGamesWon() { return this.gamesWon; }
-	void setGamesWon( Integer n ) { this.gamesWon = (n != null) ? n : 0; }
-
-	/** @see	IPoolEntry#getGamesLost */
-	@Column(name = "games_lost")
-	public int getGamesLost() { return this.gamesLost; }
-	void setGamesLost( Integer n ) { this.gamesLost = (n != null) ? n : 0; }
-
-	/** @see	IPoolEntry#getLost */
-	@Column
-	public int getLost() { return this.lost; }
-	void setLost( Integer n ) { this.lost = (n != null) ? n : 0; }
-
-	/** @see	IPoolEntry#getRemaining */
-	@Transient
-	public int getRemaining()
-	{
-		int pickCnt = this.picks.size();
-		int total = (pickCnt * (pickCnt + 1)) / 2;
-		return total - getScore() - getLost();
-	}
-
-	/** @see	IPoolEntry#getTiebreakerDiff */
-	@Transient
-	public int getTiebreakerDiff()
-	{
-		return Math.abs(getTiebreaker() - getWeek().getTiebreakerAnswer());
+		return score;
 	}
 
 	/**

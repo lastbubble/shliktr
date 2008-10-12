@@ -26,14 +26,14 @@
       <th>Points lost</th>
       <th>Points remaining</th>
     </tr>
-    <c:forEach items="${entries}" var="entry">
+    <c:forEach items="${results}" var="result">
     <tr align="right">
-      <td>${entry.player.name}</td>
-      <td>${entry.score}</td>
-      <td>${entry.gamesWon}-${entry.gamesLost}</td>
-      <td>${entry.tiebreaker}&nbsp;(${entry.tiebreakerDiff})</td>
-      <td>${entry.lost}</td>
-      <td>${entry.remaining}</td>
+      <td>${result.player.name}</td>
+      <td>${result.points}</td>
+      <td>${result.gamesWon}-${result.gamesLost}</td>
+      <td>${result.tiebreaker}&nbsp;(${result.tiebreakerDiff})</td>
+      <td>${result.pointsLost}</td>
+      <td>${result.pointsRemaining}</td>
     </tr>
     </c:forEach>
   </table>
@@ -44,7 +44,7 @@
   <p>Closest to actual tiebreaker result: ${week.tiebreakerAnswer}</p>
   <ul>
   <c:forEach items="${closest}" var="entry">
-    <li>${entry.player.name}: ${entry.tiebreaker}</li>  
+    <li>${result.player.name}: ${result.tiebreaker}</li>  
   </c:forEach>
   </ul>
 

@@ -148,7 +148,7 @@ public class PlayerPicksView extends JPanel implements View, DocumentListener
 		this.tiebreakerFld.setText(String.valueOf(this.entry.getTiebreaker()));
 		this.tiebreakerFld.getDocument().addDocumentListener(this);
 
-		this.scoreLbl.setText("Total score: "+this.entry.getScore());
+		//this.scoreLbl.setText("Total score: "+this.entry.getScore());
 
 		revalidate();
 		repaint();

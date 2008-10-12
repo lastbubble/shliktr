@@ -3,6 +3,7 @@ package org.lastbubble.shliktr.dao.hibernate;
 import org.lastbubble.shliktr.IPlayer;
 import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.PickStats;
+import org.lastbubble.shliktr.PoolResult;
 import org.lastbubble.shliktr.dao.Game;
 import org.lastbubble.shliktr.dao.Pick;
 import org.lastbubble.shliktr.dao.Player;
@@ -133,6 +134,18 @@ public final class PoolDaoHibernate implements PoolDao
 			.createAlias("week", "week")
 			.add(Restrictions.eq("week.id", week.getWeekNumber()))
 			.list();
+	}
+
+	public List<PoolResult> findResultsForWeek( int week )
+	{
+		List<PoolResult> results = (List<PoolResult>) getSession()
+			.getNamedQuery("entry.findResultsForWeek")
+			.setInteger("week", week)
+			.list();
+
+		Collections.sort(results);
+
+		return results;
 	}
 
 	public PoolEntry findEntry( IWeek week, IPlayer player )

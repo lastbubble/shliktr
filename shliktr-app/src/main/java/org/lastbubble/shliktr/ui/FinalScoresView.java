@@ -67,8 +67,8 @@ public class FinalScoresView implements View
 			for( Iterator j = scores.iterator(); j.hasNext(); )
 			{
 				finalScore = (FinalScore) j.next();
-				entry = this.poolService.findEntry(wk, finalScore.getPlayer(), true);
-				finalScore.addScore(i, entry.getScore());
+				//entry = this.poolService.findEntry(wk, finalScore.getPlayer(), true);
+				//finalScore.addScore(i, entry.getScore().getPoints());
 			}
 		}
 

@@ -210,17 +210,17 @@ public class Pool extends JFrame
 
 	private void updatePicksChooser()
 	{
-		List<? extends IPoolEntry> entries = this.poolService
-			.findEntriesForWeek(getCurrentWeek());
+		Set<? extends IPlayer> players = this.poolService
+			.findPlayersForWeek(getCurrentWeek());
 
 		this.picksChooser.removeAllItems();
 
-		for( IPoolEntry entry : entries )
+		for( IPlayer player : players )
 		{
-			this.picksChooser.addItem(entry);
+			this.picksChooser.addItem(player);
 		}
 
-		if( entries.size() > 0 )
+		if( players.size() > 0 )
 			this.picksChooser.setSelectedIndex(0);
 	}
 
@@ -356,6 +356,7 @@ public class Pool extends JFrame
 				}
 				else
 				{
+					/*
 					entry = Pool.this.poolService.findEntry(
 						week, player, true);
 
@@ -380,6 +381,7 @@ public class Pool extends JFrame
 					{
 						Pool.this.picksChooser.addItem(anEntry);
 					}
+					*/
 				}
 
 				Pool.this.picksChooser.setSelectedItem(entry);

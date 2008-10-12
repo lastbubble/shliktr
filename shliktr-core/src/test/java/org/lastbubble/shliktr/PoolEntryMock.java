@@ -46,26 +46,11 @@ public class PoolEntryMock implements IPoolEntry
 	/** @see	IPoolEntry#setTiebreaker */
 	public void setTiebreaker( int tiebreaker ) { }
 
-	/** @see	IPoolEntry#computeScore */
-	public void computeScore() { }
+	/** @see	IPoolEntry#computeResult */
+	public PoolResult computeResult() { return null; }
 
-	/** @see	IPoolEntry#getScore */
-	public int getScore() { return 0; }
-
-	/** @see	IPoolEntry#getGamesWon */
-	public int getGamesWon() { return 0; }
-
-	/** @see	IPoolEntry#getGamesLost */
-	public int getGamesLost() { return 0; }
-
-	/** @see	IPoolEntry#getLost */
-	public int getLost() { return 0; }
-
-	/** @see	IPoolEntry#getRemaining */
-	public int getRemaining() { return 0; }
-
-	/** @see	IPoolEntry#getTiebreakerDiff */
-	public int getTiebreakerDiff() { return 0; }
+	/** @see	IPoolEntry#updateScore */
+	public void updateScore() { }
 
 	/** @see	IPoolEntry#validate */
 	public boolean validate( String[] errmsg ) { return true; }

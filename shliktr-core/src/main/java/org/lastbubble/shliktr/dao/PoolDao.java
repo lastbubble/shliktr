@@ -3,6 +3,7 @@ package org.lastbubble.shliktr.dao;
 import org.lastbubble.shliktr.IPlayer;
 import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.PickStats;
+import org.lastbubble.shliktr.PoolResult;
 
 import java.util.Date;
 import java.util.List;
@@ -28,6 +29,8 @@ public interface PoolDao
 	Player findPlayerByUsername( String username );
 
 	List<PoolEntry> findEntriesForWeek( IWeek week );
+
+	List<PoolResult> findResultsForWeek( int week );
 
 	PoolEntry findEntry( IWeek week, IPlayer player );
 

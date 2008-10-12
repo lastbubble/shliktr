@@ -89,7 +89,7 @@ public class EditWeekController extends SimpleFormController
 			.findEntriesForWeek(week);
 		for( IPoolEntry entry : entries )
 		{
-			entry.computeScore();
+			entry.updateScore();
 			this.poolService.saveEntry(entry);
 		}
 

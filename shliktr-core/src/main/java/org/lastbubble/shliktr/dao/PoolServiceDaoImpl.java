@@ -6,6 +6,7 @@ import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.PickStats;
 import org.lastbubble.shliktr.PlayerPrediction;
+import org.lastbubble.shliktr.PoolResult;
 import org.lastbubble.shliktr.Winner;
 import org.lastbubble.shliktr.service.PoolService;
 
@@ -107,6 +108,13 @@ public class PoolServiceDaoImpl implements PoolService
 		}
 
 		return entries;
+	}
+
+	/** @see	PoolService#findResultsForWeek */
+	@Transactional(readOnly = true)
+	public List<PoolResult> findResultsForWeek( int week )
+	{
+		return this.dao.findResultsForWeek(week);
 	}
 
 	/** @see	PoolService#findPickStatsForWeek */
@@ -232,24 +240,26 @@ public class PoolServiceDaoImpl implements PoolService
 				}
 			}
 
+			List<PoolResult> results = new ArrayList<PoolResult>(entries.size());
+
 			for( IPoolEntry entry : entries )
 			{
-				entry.computeScore();
+				results.add(entry.computeResult());
 			}
 
-			Collections.sort(entries, IPoolEntry.COMPARE_SCORE);
+			Collections.sort(results);
 
-			int winningScore = entries.get(0).getScore();
-			if( winningScore == entries.get(1).getScore() )
+			int winningScore = results.get(0).getPoints();
+			if( winningScore == results.get(1).getPoints() )
 			{
 				outcome += "*";
 			}
 
-			for( IPoolEntry entry : entries )
+			for( PoolResult result : results )
 			{
-				if( entry.getScore() != winningScore ) break;
+				if( result.getPoints() != winningScore ) break;
 
-				IPlayer winner = entry.getPlayer();
+				IPlayer winner = result.getPlayer();
 
 				PlayerPrediction prediction = predictions.get(winner);
 				if( prediction == null )

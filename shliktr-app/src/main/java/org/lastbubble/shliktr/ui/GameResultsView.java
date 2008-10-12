@@ -6,6 +6,7 @@ import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.ITeam;
 import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.PlayerPrediction;
+import org.lastbubble.shliktr.PoolResult;
 import org.lastbubble.shliktr.StringUtils;
 import org.lastbubble.shliktr.Winner;
 import org.lastbubble.shliktr.service.PoolService;
@@ -251,15 +252,8 @@ implements View, ActionListener, ChangeListener, DocumentListener
 				games.add(this.gameUIs[i].getGame());
 		}
 
-		List<? extends IPoolEntry> entries = this.poolService
-			.findEntriesForWeek(this.week);
-
-		for( IPoolEntry entry : entries )
-		{
-			entry.computeScore();
-		}
-
-		Collections.sort(entries, IPoolEntry.COMPARE_SCORE);
+		List<PoolResult> results = this.poolService
+			.findResultsForWeek(this.week.getWeekNumber());
 
 		StringBuffer buf = new StringBuffer();
 
@@ -276,31 +270,31 @@ implements View, ActionListener, ChangeListener, DocumentListener
 		buf.append(StringUtils.pad("TIE", 3, true));
 		buf.append('\n');
 
-		for( IPoolEntry entry : entries )
+		for( PoolResult result : results )
 		{
 			buf.append(
-				StringUtils.pad(entry.getPlayer().getName(), 12, false));
+				StringUtils.pad(result.getPlayer().getName(), 12, false));
 			buf.append(' ');
-			buf.append(StringUtils.pad(entry.getScore(), 5, true));
+			buf.append(StringUtils.pad(result.getPoints(), 5, true));
 			buf.append(' ');
 
 			String record = new StringBuilder()
-				.append(entry.getGamesWon())
+				.append(result.getGamesWon())
 				.append('-')
-				.append(entry.getGamesLost())
+				.append(result.getGamesLost())
 				.toString();
 
 			buf.append(StringUtils.pad(record, 4, true));
 			buf.append(' ');
-			buf.append(StringUtils.pad(entry.getLost(), 4, true));
+			buf.append(StringUtils.pad(result.getPointsLost(), 4, true));
 			buf.append(' ');
-			buf.append(StringUtils.pad(entry.getRemaining(), 4, true));
+			buf.append(StringUtils.pad(result.getPointsRemaining(), 4, true));
 			buf.append(' ');
-			buf.append(StringUtils.pad(entry.getTiebreakerDiff(), 3, true));
+			buf.append(StringUtils.pad(result.getTiebreakerDiff(), 3, true));
 			buf.append('\n');
 		}
 
-		float total = entries.size() * 5.00F;
+		float total = results.size() * 5.00F;
 		buf.append('\n');
 		buf.append("First place: $");
 		buf.append(total * 0.7F);
