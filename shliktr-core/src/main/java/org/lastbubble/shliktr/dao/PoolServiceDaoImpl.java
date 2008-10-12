@@ -124,6 +124,14 @@ public class PoolServiceDaoImpl implements PoolService
 		return this.dao.findPickStatsForWeek(week);
 	}
 
+	/** @see	PoolService#findPlayerRankingsForTeam */
+	@Transactional(readOnly = false)
+	public Map<IPlayer, Integer> findPlayerRankingsForTeam(
+	 	int week, String team )
+	{
+		return this.dao.findPlayerRankingsForTeam(week, team);
+	}
+
 	/** @see	PoolService#findEntry */
 	@Transactional(readOnly = false)
 	public IPoolEntry findEntry( IWeek week, IPlayer player, boolean create )

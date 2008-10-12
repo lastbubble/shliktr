@@ -13,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -24,6 +26,25 @@ import javax.persistence.Transient;
  */
 @Entity
 @Table(name = "pick")
+@NamedQueries( {
+		@NamedQuery(
+			name="pick.findForWeek",
+			query="select p "
+				+"from PoolEntry as e join e.picks as p "
+				+"where e.week = :week"
+		),
+		@NamedQuery(
+			name="pick.findForTeam",
+			query="select e.player, p.ranking "
+				+"from PoolEntry as e join e.picks as p join p.game as g "
+				+"where e.week.id = :week and ("
+					+"(p.winner = org.lastbubble.shliktr.Winner.HOME and g.homeTeam.abbr = :team) "
+						+"or "
+					+"(p.winner = org.lastbubble.shliktr.Winner.AWAY and g.awayTeam.abbr = :team)"
+				+")"
+		)
+	}
+)
 public class Pick extends PickBase
 {
 	private Integer id;

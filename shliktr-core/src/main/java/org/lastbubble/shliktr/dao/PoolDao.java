@@ -7,6 +7,7 @@ import org.lastbubble.shliktr.PoolResult;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -35,6 +36,8 @@ public interface PoolDao
 	PoolEntry findEntry( IWeek week, IPlayer player );
 
 	List<PickStats> findPickStatsForWeek( IWeek week );
+
+	Map<IPlayer, Integer> findPlayerRankingsForTeam( int week, String team );
 
 	void refreshGamesForWeek( Week week );
 

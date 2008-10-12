@@ -39,6 +39,8 @@ public interface PoolService
 
 	List<PickStats> findPickStatsForWeek( IWeek week );
 
+	Map<IPlayer, Integer> findPlayerRankingsForTeam( int week, String team );
+
 	IPoolEntry findEntry( IWeek week, IPlayer player, boolean create );
 
 	void saveEntry( IPoolEntry entry );

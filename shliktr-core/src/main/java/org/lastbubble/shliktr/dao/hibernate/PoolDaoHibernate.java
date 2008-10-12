@@ -1,15 +1,15 @@
 package org.lastbubble.shliktr.dao.hibernate;
 
+import org.lastbubble.shliktr.IPick;
 import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.ITeam;
 import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.PickStats;
 import org.lastbubble.shliktr.PoolResult;
 import org.lastbubble.shliktr.dao.Game;
-import org.lastbubble.shliktr.dao.Pick;
 import org.lastbubble.shliktr.dao.Player;
 import org.lastbubble.shliktr.dao.PoolEntry;
 import org.lastbubble.shliktr.dao.PoolDao;
-import org.lastbubble.shliktr.dao.Team;
 import org.lastbubble.shliktr.dao.Week;
 
 import java.util.*;
@@ -161,27 +161,16 @@ public final class PoolDaoHibernate implements PoolDao
 
 	public List<PickStats> findPickStatsForWeek( IWeek week )
 	{
-		List<Pick> picks = (List<Pick>) getSession()
-			.createCriteria(Pick.class)
-			.createAlias("game", "game")
-			.add(Restrictions.eq("game.week", week))
+		Map<ITeam, PickStats> statsByTeam = new HashMap<ITeam, PickStats>();
+
+		List<? extends IPick> picks = (List<? extends IPick>) getSession()
+			.getNamedQuery("pick.findForWeek")
+			.setParameter("week", week)
 			.list();
 
-		Map<Team, PickStats> statsByTeam = new HashMap<Team, PickStats>();
-
-		for( Pick pick : picks )
+		for( IPick pick : picks )
 		{
-			Team team = null;
-
-			if( pick.getWinner() != null )
-			{
-				switch( pick.getWinner() )
-				{
-					case HOME: team = pick.getGame().getHomeTeam(); break;
-					case AWAY: team = pick.getGame().getAwayTeam(); break;
-				}
-			}
-
+			ITeam team = pick.getTeam();
 			if( team == null ) continue;
 
 			PickStats stats = statsByTeam.get(team);
@@ -200,6 +189,26 @@ public final class PoolDaoHibernate implements PoolDao
 		Collections.sort(pickStats);
 
 		return pickStats;
+	}
+
+	/** @see	PoolDao#findPlayerRankingsForTeam */
+	public Map<IPlayer, Integer> findPlayerRankingsForTeam(
+		int week, String team )
+	{
+		Map<IPlayer, Integer> playerRankings = new HashMap<IPlayer, Integer>();
+
+		List<Object[]> resultSet = (List<Object[]>) getSession()
+			.getNamedQuery("pick.findForTeam")
+			.setInteger("week", week)
+			.setParameter("team", team)
+			.list();
+
+		for( Object[] row : resultSet )
+		{
+			playerRankings.put((IPlayer) row[0], (Integer) row[1]);
+		}
+
+		return playerRankings;
 	}
 
 	public void refreshGamesForWeek( Week week )

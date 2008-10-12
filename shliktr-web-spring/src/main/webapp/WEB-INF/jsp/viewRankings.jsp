@@ -9,27 +9,24 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
   <link rel="stylesheet" type="text/css" href="../pool.css" />
-  <title>NFL Pool - Pick statistics for week ${week.id}</title>
+  <title>NFL Pool - Player rankings for week ${week.id}</title>
 </head>
 
 <body>
 
-  <h1>Pick statistics for week ${week.id}</h1>
+  <h1>Player rankings for ${team} in week ${week.id}</h1>
+
+  <%@ include file="/WEB-INF/jsp/welcome.jsp" %>
 
   <table>
     <tr>
-      <th>Team</th>
-      <th>Times Picked</th>
-      <th>Total</th>
-      <th>Rankings</th>
+      <th>Player</th>
+      <th>Ranking</th>
     </tr>
-    <c:forEach items="${statsList}" var="stats">
+    <c:forEach items="${rankings}" var="ranking">
     <tr>
-      <td><a href="viewRankings?weekId=${week.id}&team=${stats.team.abbr}"
-             target="_blank">${stats.team.location}</a></td>
-      <td>${fn:length(stats.rankings)}</td>
-      <td>${stats.total}</td>
-      <td>${stats.rankings}</td>
+      <td>${ranking.key.name}</td>
+      <td>${ranking.value}</td>
     </tr>
     </c:forEach>
   </table>

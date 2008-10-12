@@ -53,6 +53,11 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 	      p:viewName="viewPickStats"
 	      p:poolService-ref="poolService" />
 
+	<bean id="viewRankingsController"
+	      class="org.lastbubble.shliktr.web.ViewRankingsController"
+	      p:viewName="viewRankings"
+	      p:poolService-ref="poolService" />
+
   <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="urlMap">
 			<map>
@@ -67,6 +72,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 				<entry key="/viewResults" value-ref="viewResultsController" />
 				<entry key="/predictResults" value-ref="predictResultsController" />
 				<entry key="/viewPickStats" value-ref="viewPickStatsController" />
+				<entry key="/viewRankings" value-ref="viewRankingsController" />
 			</map>
 		</property>
 	</bean>
