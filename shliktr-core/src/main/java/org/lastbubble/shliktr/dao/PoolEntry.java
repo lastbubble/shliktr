@@ -18,6 +18,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -30,18 +31,33 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "entry")
-@NamedQuery(
-	name="entry.findResultsForWeek",
-	query="select new org.lastbubble.shliktr.PoolResult("
-		+"w.id, "
-		+"e.player, "
-		+"e.score, "
-		+"w.games.size, "
-		+"e.tiebreaker, "
-		+"abs(w.tiebreakerAnswer - e.tiebreaker)"
-		+") "
-		+"from PoolEntry as e join e.week as w "
-		+"where w.id = :week"
+@NamedQueries( {
+		@NamedQuery(
+			name="entry.findResultsForWeek",
+			query="select new org.lastbubble.shliktr.PoolResult("
+				+"w.id, "
+				+"e.player, "
+				+"e.score, "
+				+"w.games.size, "
+				+"e.tiebreaker, "
+				+"abs(w.tiebreakerAnswer - e.tiebreaker)"
+				+") "
+				+"from PoolEntry as e join e.week as w "
+				+"where w.id = :week"
+		),
+		@NamedQuery(
+			name="entry.findAllResults",
+			query="select new org.lastbubble.shliktr.PoolResult("
+				+"w.id, "
+				+"e.player, "
+				+"e.score, "
+				+"w.games.size, "
+				+"e.tiebreaker, "
+				+"abs(w.tiebreakerAnswer - e.tiebreaker)"
+				+") "
+				+"from PoolEntry as e join e.week as w"
+		)
+	}
 )
 public class PoolEntry implements IPoolEntry
 {

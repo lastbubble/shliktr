@@ -2,6 +2,7 @@ package org.lastbubble.shliktr.dao;
 
 import org.lastbubble.shliktr.IGame;
 import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IPoolBank;
 import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.PickStats;
@@ -115,6 +116,20 @@ public class PoolServiceDaoImpl implements PoolService
 	public List<PoolResult> findResultsForWeek( int week )
 	{
 		return this.dao.findResultsForWeek(week);
+	}
+
+	/** @see	PoolService#findBankForWeek */
+	@Transactional(readOnly = true)
+	public IPoolBank findBankForWeek( int week )
+	{
+		return new PoolBank(this.dao.findResultsForWeek(week));
+	}
+
+	/** @see	PoolService#findBank */
+	@Transactional(readOnly = true)
+	public IPoolBank findBank()
+	{
+		return new PoolBank(this.dao.findAllResults());
 	}
 
 	/** @see	PoolService#findPickStatsForWeek */

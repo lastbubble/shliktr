@@ -63,8 +63,6 @@ public class PredictResultsTestCase extends PoolServiceTestCase
 	// Tests
 	//---------------------------------------------------------------------------
 
-	public void testSomething() { }
-
 	public void testPredictResults_nullWeek()
 	{
 		predictions = poolService.predictResults(null, Collections.EMPTY_LIST);

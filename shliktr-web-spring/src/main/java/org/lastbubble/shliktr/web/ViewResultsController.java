@@ -35,6 +35,9 @@ public class ViewResultsController extends WeekController
 
 		modelAndView.addObject("results", results);
 
+		modelAndView.addObject("bank", this.poolService
+			.findBankForWeek(week.getWeekNumber()));
+
 		List<PoolResult> closest = new ArrayList<PoolResult>();
 
 		int min = Integer.MAX_VALUE;

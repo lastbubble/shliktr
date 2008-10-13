@@ -1,6 +1,7 @@
 package org.lastbubble.shliktr.service;
 
 import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IPoolBank;
 import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.PickStats;
@@ -36,6 +37,10 @@ public interface PoolService
 	List<? extends IPoolEntry> findEntriesForWeek( IWeek week );
 
 	List<PoolResult> findResultsForWeek( int week );
+
+	IPoolBank findBankForWeek( int week );
+
+	IPoolBank findBank();
 
 	List<PickStats> findPickStatsForWeek( IWeek week );
 

@@ -33,6 +33,8 @@ public interface PoolDao
 
 	List<PoolResult> findResultsForWeek( int week );
 
+	List<PoolResult> findAllResults();
+
 	PoolEntry findEntry( IWeek week, IPlayer player );
 
 	List<PickStats> findPickStatsForWeek( IWeek week );

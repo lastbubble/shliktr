@@ -148,6 +148,13 @@ public final class PoolDaoHibernate implements PoolDao
 		return results;
 	}
 
+	public List<PoolResult> findAllResults()
+	{
+		return (List<PoolResult>) getSession()
+			.getNamedQuery("entry.findAllResults")
+			.list();
+	}
+
 	public PoolEntry findEntry( IWeek week, IPlayer player )
 	{
 		return (PoolEntry) getSession()

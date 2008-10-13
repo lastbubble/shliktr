@@ -30,6 +30,11 @@ public final class Player extends PlayerImpl implements Serializable
 
 	Player( String username ) { super(username); }
 
+	Player( String username, String name )
+	{
+		super(username);
+		setName(name);
+	}
 
 	//-------------------------------------------------------------------------
 	// Methods
