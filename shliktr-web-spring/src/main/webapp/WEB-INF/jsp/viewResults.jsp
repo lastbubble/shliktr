@@ -57,7 +57,7 @@
 
   <p>Closest to actual tiebreaker result: ${week.tiebreakerAnswer}</p>
   <ul>
-  <c:forEach items="${closest}" var="entry">
+  <c:forEach items="${closest}" var="result">
     <li>${result.player.name}: ${result.tiebreaker}</li>  
   </c:forEach>
   </ul>
