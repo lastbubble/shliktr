@@ -71,17 +71,16 @@ public final class PoolDaoHibernate implements PoolDao
 			java.sql.Connection conn = getSession().connection();
 			java.sql.Statement stmt = conn.createStatement();
 			java.sql.ResultSet rset = stmt.executeQuery(
-				"select wg.week_id from week_game wg join game g "+
-				"on wg.games_id = g.id "+
-				"where datediff(curdate(), g.playedOn) <= 0 "+
-				"order by wg.week_id limit 1");
+				"select w.id from week w join game g "+
+				"on g.week_id = w.id "+
+				"where datediff(curdate(), g.played_on) <= 0 "+
+				"order by w.id limit 1");
 			if( rset.next() )
 			{
 				weekId = rset.getInt(1);
 			}
 
 		} catch( Throwable t ) { }
-
 		return findWeekById(weekId);
 	}
 
