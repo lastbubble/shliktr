@@ -1,11 +1,11 @@
 <div>
   <table><c:forEach items="${week.games}" var="game">
     <tr>
-      <td><img src="../images/${game.awayTeam.abbr}.gif" /></td>
+      <td><img class="teamlogo" src="../images/${game.awayTeam.abbr}.gif" /></td>
       <td class="${game.awayScore > game.homeScore ? 'winningTeam' : 'losingTeam'}">${game.awayTeam.location}</td>
       <td>${game.awayScore}</td>
       <td>&nbsp;&nbsp;&nbsp;</td>
-      <td><img src="../images/${game.homeTeam.abbr}.gif" /></td>
+      <td><img class="teamlogo" src="../images/${game.homeTeam.abbr}.gif" /></td>
       <td class="${game.homeScore > game.awayScore ? 'winningTeam' : 'losingTeam'}">${game.homeTeam.location}</td>
       <td>${game.homeScore}</td>
     </tr>

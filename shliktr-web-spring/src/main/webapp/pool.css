@@ -7,6 +7,10 @@ body {
 	font-weight: bold;
 }
 
+.teamlogo {
+	width: 20px;
+}
+
 .winningTeam {
 	background-color: pink;
 	font-weight: bold;
@@ -15,4 +19,18 @@ body {
 .losingTeam {
 	background-color: white;
 	font-weight: normal;
+}
+
+.correct {
+	background-color: #00FF00;
+	font-weight: bold;
+}
+
+.incorrect {
+	color: white;
+	background-color: red;
+	font-weight: bold;
+}
+
+.incomplete {
 }

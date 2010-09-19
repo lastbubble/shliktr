@@ -25,12 +25,12 @@
     <table>
     <c:forEach items="${week.games}" var="game" varStatus="i">
     <tr>
-      <td><img src="../images/${game.awayTeam.abbr}.gif" /></td>
+      <td><img class="teamlogo" src="../images/${game.awayTeam.abbr}.gif" /></td>
       <td>${game.awayTeam.location}</td>
       <td>
         <spring-form:input path="games[${i.index}].awayScore" />
       </td>
-      <td><img src="../images/${game.homeTeam.abbr}.gif" /></td>
+      <td><img class="teamlogo" src="../images/${game.homeTeam.abbr}.gif" /></td>
       <td>${game.homeTeam.location}</td>
       <td>
         <spring-form:input path="games[${i.index}].homeScore" />

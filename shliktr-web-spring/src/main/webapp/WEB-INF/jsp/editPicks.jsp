@@ -29,12 +29,12 @@
   <table>
   <c:forEach items="${picks.picks}" var="pick" varStatus="i">
   <tr>
-	<td><img src="../images/${pick.game.awayTeam.abbr}.gif" /></td>
+	<td><img class="teamlogo" src="../images/${pick.game.awayTeam.abbr}.gif" /></td>
 	<td>
       <spring-form:radiobutton path="picks[${i.index}].winner" value="away" />
 	  ${pick.game.awayTeam.location}
 	</td>
-	<td><img src="../images/${pick.game.homeTeam.abbr}.gif" /></td>
+	<td><img class="teamlogo" src="../images/${pick.game.homeTeam.abbr}.gif" /></td>
 	<td>
       <spring-form:radiobutton path="picks[${i.index}].winner" value="home" />
 	  ${pick.game.homeTeam.location}</td>

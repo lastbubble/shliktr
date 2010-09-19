@@ -19,16 +19,18 @@
 
   <div style="float: left">
     <a href="editPicks?weekId=${picks.week.id}&playerId=${picks.player.id}">Edit picks</a>
+	<br />
+    <a href="viewWeek?weekId=${picks.week.id}">View week</a>
   </div>
 
   <div>
     <table>
     <c:forEach items="${picks.picks}" var="pick">
-      <tr>
-        <td><img src="../images/${pick.game.awayTeam.abbr}.gif" /></td>
+      <tr class="${pick.correct ? 'correct' : 'incorrect'}">
+        <td><img class="teamlogo" src="../images/${pick.game.awayTeam.abbr}.gif" /></td>
         <td>${pick.game.awayTeam.location}</td>
         <td>&nbsp;&nbsp;&nbsp;</td>
-        <td><img src="../images/${pick.game.homeTeam.abbr}.gif" /></td>
+        <td><img class="teamlogo" src="../images/${pick.game.homeTeam.abbr}.gif" /></td>
         <td>${pick.game.homeTeam.location}</td>
         <td>${pick.team.location}</td>
         <td>${pick.ranking}</td>
