@@ -6,20 +6,24 @@
 	<game id="1"
 	      home_team_id="1" away_team_id="2"
 	      week_id="1"
-	      played_on="2008-12-21" />
+	      played_on="2008-12-21"
+	      complete="0" />
 	<game id="2"
 	      home_team_id="2" away_team_id="1"
 	      week_id="1"
-	      played_on="2008-12-25" />
+	      played_on="2008-12-25"
+	      complete="0" />
 
 	<week id="2" tiebreaker_answer="0" />
 	<game id="3"
 	      home_team_id="1" away_team_id="2"
 	      week_id="2"
-	      played_on="2008-11-01" />
+	      played_on="2008-11-01"
+	      complete="1" />
 	<game id="4"
 	      home_team_id="2" away_team_id="1"
 	      week_id="2"
-	      played_on="2008-11-01" />
+	      played_on="2008-11-01"
+	      complete="1" />
 
 </dataset>

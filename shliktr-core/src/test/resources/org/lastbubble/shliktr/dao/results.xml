@@ -8,21 +8,25 @@
 	<game id="1" week_id="1"
 	      home_team_id="1" away_team_id="2"
 	      home_score="0"   away_score="0"
-	      played_on="2008-12-21" />
+	      played_on="2008-12-21"
+	      complete="1" />
 	<game id="2" week_id="1"
 	      home_team_id="3" away_team_id="4"
 	      home_score="0"   away_score="0"
-	      played_on="2008-12-21" />
+	      played_on="2008-12-21"
+	      complete="1" />
 
 	<week id="2" tiebreaker_answer="0" />
 	<game id="3" week_id="2"
 	      home_team_id="1" away_team_id="3"
 	      home_score="0"   away_score="0"
-	      played_on="2008-12-25" />
+	      played_on="2008-12-25"
+	      complete="0" />
 	<game id="4" week_id="2"
 	      home_team_id="2" away_team_id="4"
 	      home_score="0"   away_score="0"
-	      played_on="2008-12-25" />
+	      played_on="2008-12-25"
+	      complete="0" />
 
 	<player id="1" name="player1" username="player1" active="1" />
 	<player id="2" name="player2" username="player2" active="1" />

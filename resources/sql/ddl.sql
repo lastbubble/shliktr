@@ -16,6 +16,7 @@ create table game (
     away_score integer not null default 0,
     home_score integer not null default 0,
     played_on datetime not null,
+	complete bit not null default 0,
     away_team_id integer not null,
     home_team_id integer not null,
     week_id integer not null,

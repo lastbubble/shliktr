@@ -26,7 +26,7 @@
   <div>
     <table>
     <c:forEach items="${picks.picks}" var="pick">
-      <tr class="${pick.correct ? 'correct' : 'incorrect'}">
+      <tr class="${pick.game.complete ? (pick.correct ? 'correct' : 'incorrect') : 'incomplete'}">
         <td><img class="teamlogo" src="../images/${pick.game.awayTeam.abbr}.gif" /></td>
         <td>${pick.game.awayTeam.location}</td>
         <td>&nbsp;&nbsp;&nbsp;</td>

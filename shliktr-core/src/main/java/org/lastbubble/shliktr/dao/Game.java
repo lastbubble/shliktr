@@ -100,9 +100,9 @@ public final class Game implements IGame
 	void setPlayedOn( Date d ) { this.playedOn = d; }
 
 	/** @see	IGame#isComplete */
-	@Transient
+	@Column(name="complete", nullable = false)
 	public boolean isComplete() { return this.complete; }
-	void setComplete( boolean b ) { this.complete = b; }
+	public void setComplete( boolean b ) { this.complete = b; }
 
 
 	//---------------------------------------------------------------------------

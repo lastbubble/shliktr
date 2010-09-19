@@ -28,12 +28,15 @@
       <td><img class="teamlogo" src="../images/${game.awayTeam.abbr}.gif" /></td>
       <td>${game.awayTeam.location}</td>
       <td>
-        <spring-form:input path="games[${i.index}].awayScore" />
+        <spring-form:input path="games[${i.index}].awayScore" size="2" />
       </td>
       <td><img class="teamlogo" src="../images/${game.homeTeam.abbr}.gif" /></td>
       <td>${game.homeTeam.location}</td>
       <td>
-        <spring-form:input path="games[${i.index}].homeScore" />
+        <spring-form:input path="games[${i.index}].homeScore" size="2" />
+      </td>
+      <td>
+        <spring-form:checkbox path="games[${i.index}].complete" />Complete
       </td>
     </tr>
     </c:forEach>
