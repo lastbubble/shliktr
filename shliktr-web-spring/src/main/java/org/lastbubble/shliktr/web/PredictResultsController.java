@@ -2,13 +2,15 @@ package org.lastbubble.shliktr.web;
 
 import org.lastbubble.shliktr.IGame;
 import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.PlayerPrediction;
+import org.lastbubble.shliktr.PoolResult;
 import org.lastbubble.shliktr.Winner;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,7 +25,7 @@ public class PredictResultsController extends WeekController
 
 	@Override
 	protected ModelAndView handleWeek( ModelAndView modelAndView,
-		IWeek week, IPlayer player )
+		IWeek week, IPlayer player, HttpServletRequest request )
 	{
 		List<Prediction> predictions = new ArrayList<Prediction>();
 		modelAndView.addObject("predictions", predictions);
@@ -32,8 +34,14 @@ public class PredictResultsController extends WeekController
 		List<Winner> winners = new ArrayList<Winner>(games.size());
 		List<IGame> unfinished = new ArrayList<IGame>(games.size());
 
+		Set<String> winningTeams = new HashSet<String>();
+		String[] teamAbbrs = request.getParameterValues("winner");
+		if( teamAbbrs != null ) { winningTeams.addAll(Arrays.asList(teamAbbrs)); }
+
 		for( IGame game : games )
 		{
+			if( game.isComplete() == false ) { updateWinner(game, winningTeams); }
+
 			Winner winner = game.getWinner();
 			winners.add(winner);
 			if( winner == null )
@@ -55,7 +63,33 @@ public class PredictResultsController extends WeekController
 			predictions.add(Prediction.create(playerPrediction, unfinished));
 		}
 
+		if( unfinished.isEmpty() )
+		{
+			List<? extends IPoolEntry> entries = this.poolService.findEntriesForWeek(week);
+			List<PoolResult> results = new ArrayList<PoolResult>(entries.size());
+			for( IPoolEntry entry : entries )
+			{
+				results.add(entry.computeResult(games));
+			}
+			Collections.sort(results);
+			modelAndView.addObject("results", results);
+		}
+
 		return modelAndView;
+	}
+
+	protected void updateWinner( IGame game, Collection<String> winningTeams )
+	{
+		if( winningTeams.contains(game.getAwayTeam().getAbbr()) )
+		{
+			game.setAwayScore(1);
+			game.setHomeScore(0);
+		}
+		else if( winningTeams.contains(game.getHomeTeam().getAbbr()) )
+		{
+			game.setAwayScore(0);
+			game.setHomeScore(1);
+		}
 	}
 
 

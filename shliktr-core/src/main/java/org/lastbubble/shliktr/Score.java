@@ -60,14 +60,19 @@ public class Score implements Comparable<Score>
 
 	public void add( IPick pick )
 	{
-		if( pick.isCorrect() )
+		update(pick.getRanking(), pick.isCorrect());
+	}
+
+	public void update( int ranking, boolean won )
+	{
+		if( won )
 		{
-			this.points += pick.getRanking();
+			this.points += ranking;
 			this.gamesWon++;
 		}
 		else
 		{
-			this.pointsLost += pick.getRanking();
+			this.pointsLost += ranking;
 			this.gamesLost++;
 		}
 	}

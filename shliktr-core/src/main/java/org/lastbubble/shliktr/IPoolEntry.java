@@ -20,6 +20,8 @@ public interface IPoolEntry
 
 	PoolResult computeResult();
 
+	PoolResult computeResult( List<? extends IGame> games );
+
 	void updateScore();
 
 	boolean validate( String[] errmsg );

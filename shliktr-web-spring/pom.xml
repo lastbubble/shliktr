@@ -89,7 +89,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>shliktr-web-spring</finalName>
+		<finalName>shliktr</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.mortbay.jetty</groupId>

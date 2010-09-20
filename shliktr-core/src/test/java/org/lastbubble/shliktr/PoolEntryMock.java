@@ -49,6 +49,9 @@ public class PoolEntryMock implements IPoolEntry
 	/** @see	IPoolEntry#computeResult */
 	public PoolResult computeResult() { return null; }
 
+	/** @see	IPoolEntry#computeResult(List<? extends IGame>) */
+	public PoolResult computeResult( List<? extends IGame> games ) { return null; }
+
 	/** @see	IPoolEntry#updateScore */
 	public void updateScore() { }
 

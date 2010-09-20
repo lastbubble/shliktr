@@ -1,5 +1,6 @@
 package org.lastbubble.shliktr.dao;
 
+import org.lastbubble.shliktr.IGame;
 import org.lastbubble.shliktr.IPick;
 import org.lastbubble.shliktr.IPoolEntry;
 import org.lastbubble.shliktr.PoolResult;
@@ -161,6 +162,19 @@ public class PoolEntry implements IPoolEntry
 		);
 	}
 
+	/** @see	IPoolEntry#computeResult(List<? extends IGame>) */
+	public PoolResult computeResult( List<? extends IGame> games )
+	{
+		return new PoolResult(
+			this.week.getWeekNumber(),
+			this.player,
+			computeScore(games),
+			games.size(),
+			this.tiebreaker,
+			Math.abs(week.getTiebreakerAnswer() - this.tiebreaker)
+		);
+	}
+
 	/** @see	IPoolEntry#updateScore */
 	public void updateScore()
 	{
@@ -176,6 +190,23 @@ public class PoolEntry implements IPoolEntry
 			if( pick.getGame().getWinner() != null )
 			{
 				score.add(pick);
+			}
+		}
+
+		return score;
+	}
+
+	private Score computeScore( List<? extends IGame> games )
+	{
+		Score score = new Score();
+
+		for( Pick pick : picks )
+		{
+			int i = games.indexOf(pick.getGame());
+			if( i > -1 )
+			{
+				IGame game = games.get(i);
+				score.update(pick.getRanking(), game.getWinner() == pick.getWinner());
 			}
 		}
 
