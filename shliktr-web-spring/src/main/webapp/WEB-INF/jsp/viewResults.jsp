@@ -38,6 +38,8 @@
     </c:forEach>
   </table>
 
+  <div style="display:${isAdmin ? 'block' : 'none'}; font-family: monospace; white-space: pre;">${resultOutput}</div>
+
   <table border="1" cellpadding="3">
     <tr>
       <th>Player</th>
@@ -51,6 +53,8 @@
     </tr>
   </table><br />
   <div>Reserve: ${bank.reserve}</div>
+
+  <div style="display:${isAdmin ? 'block' : 'none'}; font-family: monospace; white-space: pre;">${bankOutput}</div>
 
   <h2>Tiebreaker</h2>
   <p>${week.tiebreaker}</p>

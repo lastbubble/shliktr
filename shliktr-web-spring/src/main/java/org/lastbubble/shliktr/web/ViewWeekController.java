@@ -1,5 +1,6 @@
 package org.lastbubble.shliktr.web;
 
+import org.lastbubble.shliktr.IGame;
 import org.lastbubble.shliktr.IPlayer;
 import org.lastbubble.shliktr.IWeek;
 
@@ -41,6 +42,17 @@ public class ViewWeekController extends WeekController
 				modelAndView.addObject("hasPicks", players.contains(player));
 			}
 		}
+
+		StringBuilder buf = new StringBuilder();
+		for( IGame game : week.getGames() )
+		{
+			buf.append(String.format(
+				"%-13s  %-13s  _____________  ___________\n",
+				game.getAwayTeam().getLocation(),
+				game.getHomeTeam().getLocation()
+			));
+		}
+		modelAndView.addObject("weekOutput", buf.toString());
 
 		return modelAndView;
 	}

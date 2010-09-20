@@ -1,6 +1,8 @@
 package org.lastbubble.shliktr.web;
 
 import org.lastbubble.shliktr.IPlayer;
+import org.lastbubble.shliktr.IPoolAccount;
+import org.lastbubble.shliktr.IPoolBank;
 import org.lastbubble.shliktr.IWeek;
 import org.lastbubble.shliktr.PoolResult;
 
@@ -35,8 +37,41 @@ public class ViewResultsController extends WeekController
 
 		modelAndView.addObject("results", results);
 
-		modelAndView.addObject("bank", this.poolService
-			.findBankForWeek(week.getWeekNumber()));
+		StringBuilder buf = new StringBuilder()
+			.append("PLAYER       SCORE  (W-L)\n");
+		for( PoolResult result : results )
+		{
+			buf.append(String.format(
+				"%-12s  %3d   %2d-%-2d\n",
+				result.getPlayer().getName(),
+				result.getPoints(),
+				result.getGamesWon(),
+				result.getGamesLost()
+			));
+		}
+		modelAndView.addObject("resultOutput", buf.toString());
+
+		IPoolBank bank = this.poolService.findBankForWeek(week.getWeekNumber());
+
+		modelAndView.addObject("bank", bank);
+
+		buf.setLength(0);
+		for( IPoolAccount account : bank.getAccounts() )
+		{
+			int points = account.getPoints();
+			String amount = String.format(
+				"%s$%d.%02d",
+				(points > 0) ? "" : "-",
+				Math.abs(points / 100),
+				(points % 100)
+			);
+			buf.append(String.format(
+				"%-12s %7s\n",
+				account.getPlayer().getName(),
+				amount
+			));
+		}
+		modelAndView.addObject("bankOutput", buf.toString());
 
 		List<PoolResult> closest = new ArrayList<PoolResult>();
 

@@ -71,6 +71,8 @@
 
   <%@ include file="/WEB-INF/jsp/week.jsp" %>
 
+  <div style="display:${isAdmin ? 'block' : 'none'}; font-family: monospace; white-space: pre;">${weekOutput}</div>
+
 </body>
 
 </html>
