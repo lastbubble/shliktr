@@ -63,7 +63,12 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 	      p:viewName="viewFinalScores"
 	      p:poolService-ref="poolService" />
 
-  <bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+	<bean id="getPickResultsController"
+	      class="org.lastbubble.shliktr.web.GetPickResultsController"
+	      p:viewName="pickResults"
+	      p:poolService-ref="poolService" />
+
+	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="urlMap">
 			<map>
 				<entry key="/home" value-ref="homeController" />
@@ -79,6 +84,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 				<entry key="/viewPickStats" value-ref="viewPickStatsController" />
 				<entry key="/viewRankings" value-ref="viewRankingsController" />
 				<entry key="/viewFinalScores" value-ref="viewFinalScoresController" />
+				<entry key="/getPickResults" value-ref="getPickResultsController" />
 			</map>
 		</property>
 	</bean>

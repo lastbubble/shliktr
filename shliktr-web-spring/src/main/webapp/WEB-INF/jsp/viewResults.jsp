@@ -7,11 +7,31 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.5/dijit/themes/tundra/tundra.css" />
   <link rel="stylesheet" type="text/css" href="../pool.css" />
   <title>NFL Pool - Results for week ${week.id}</title>
+  <script src="http://ajax.googleapis.com/ajax/libs/dojo/1.5/dojo/dojo.xd.js" djConfig="parseOnLoad:true"></script>
+  <script type="text/javascript">
+  dojo.require("dijit.Dialog");
+  dojo.require("dijit.form.Button");
+
+  function showPicks(id, name) {
+    var dlg = dijit.byId('picksDlg');
+    dlg.attr('title', name + "'s Picks");
+    dojo.xhrGet({
+      url: '../app/getPickResults',
+      content: {'weekId': ${week.id}, 'playerId': id},
+      handleAs: 'text',
+      load: function(data) {
+        dojo.byId('pickResults').innerHTML = data;
+        dlg.show();
+      }
+    });
+  }
+  </script>
 </head>
 
-<body>
+<body class="tundra">
 
   <h1>Results for week ${week.id}</h1>
 
@@ -28,7 +48,11 @@
     </tr>
     <c:forEach items="${results}" var="result">
     <tr align="right">
-      <td>${result.player.name}</td>
+      <td>
+        <a href="#" onclick="showPicks(${result.player.id}, '${result.player.name}'); return false" title="View ${result.player.name}'s picks" style="text-decoration: none">
+          ${result.player.name}
+        </a>
+      </td>
       <td>${result.points}</td>
       <td>${result.gamesWon}-${result.gamesLost}</td>
       <td>${result.tiebreaker}&nbsp;(${result.tiebreakerDiff})</td>
@@ -65,6 +89,10 @@
     <li>${result.player.name}: ${result.tiebreaker}</li>  
   </c:forEach>
   </ul>
+
+  <div dojoType="dijit.Dialog" id="picksDlg" title="Picks" style="display:none">
+    <div id="pickResults" />
+  </div>
 
 </body>
 
