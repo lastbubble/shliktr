@@ -96,6 +96,7 @@
       /app/viewresults*=ROLE_ANONYMOUS,ROLE_PLAYER,ROLE_ADMIN
       /app/getpickresults*=ROLE_ANONYMOUS,ROLE_PLAYER,ROLE_ADMIN
       /app/viewheadtohead*=ROLE_ANONYMOUS,ROLE_PLAYER,ROLE_ADMIN
+      /app/predictresults*=ROLE_ANONYMOUS,ROLE_PLAYER,ROLE_ADMIN
       /app/editweek*=ROLE_ADMIN
       /app/addpicks*=ROLE_ADMIN
       /**=ROLE_PLAYER,ROLE_ADMIN

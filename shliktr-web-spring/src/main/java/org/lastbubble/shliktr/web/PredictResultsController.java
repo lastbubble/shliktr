@@ -63,6 +63,8 @@ public class PredictResultsController extends WeekController
 			predictions.add(Prediction.create(playerPrediction, unfinished));
 		}
 
+		modelAndView.addObject("total", (unfinished.isEmpty()) ? 1 : Math.pow(2, unfinished.size()));
+
 		if( unfinished.isEmpty() )
 		{
 			List<? extends IPoolEntry> entries = this.poolService.findEntriesForWeek(week);
