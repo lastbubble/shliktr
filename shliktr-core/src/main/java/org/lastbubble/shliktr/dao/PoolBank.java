@@ -22,6 +22,7 @@ public class PoolBank implements IPoolBank
 	private Map<IPlayer, List<PoolResult>> resultsByPlayer =
 		new HashMap<IPlayer, List<PoolResult>>();
 
+	private int lastWeek;
 
 	//---------------------------------------------------------------------------
 	// Constructor
@@ -68,6 +69,13 @@ public class PoolBank implements IPoolBank
 				}
 			}
 		}
+
+		int week = 0;
+		for( ; week < resultsByWeek.size(); week++ )
+		{
+			if( resultsByWeek.get(week).isEmpty() ) break;
+		}
+		this.lastWeek = Math.max(3, week - 3);
 	}
 
 
@@ -106,7 +114,7 @@ public class PoolBank implements IPoolBank
 
 		for( Entry<IPlayer, List<PoolResult>> entry : resultsByPlayer.entrySet() )
 		{
-			finalScores.add( new FinalScore(entry.getKey(), entry.getValue()));
+			finalScores.add( new FinalScore(entry.getKey(), entry.getValue(), this.lastWeek));
 		}
 
 		Collections.sort(finalScores);

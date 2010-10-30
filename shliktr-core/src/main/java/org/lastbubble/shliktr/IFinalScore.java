@@ -11,5 +11,7 @@ public interface IFinalScore
 
 	int getPoints();
 
+	int getTotal();
+
 	List<PoolResult> getResults();
 }

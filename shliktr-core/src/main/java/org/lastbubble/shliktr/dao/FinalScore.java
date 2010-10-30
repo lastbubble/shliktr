@@ -15,6 +15,8 @@ public class FinalScore implements IFinalScore, Comparable<FinalScore>
 
 	private int points;
 
+	private int total;
+
 	private List<PoolResult> results;
 
 
@@ -22,20 +24,18 @@ public class FinalScore implements IFinalScore, Comparable<FinalScore>
 	// Constructor
 	//---------------------------------------------------------------------------
 
-	public FinalScore( IPlayer player, List<PoolResult> results )
+	public FinalScore( IPlayer player, List<PoolResult> results, int lastWeek )
 	{
 		this.player = player;
 
 		this.results = new ArrayList<PoolResult>(results);
 		Collections.sort(this.results);
 
-		int cnt = this.results.size();
-		if( cnt > 3 ) cnt -= 3;
-
-		this.points = 0;
-		for( int i = 0; i < cnt; i++ )
+		for( int i = 0, cnt = this.results.size(); i < cnt; i++ )
 		{
-			this.points += this.results.get(i).getPoints();
+			int n = this.results.get(i).getPoints();
+			this.total += n;
+			if( i < lastWeek ) { this.points += n; }
 		}
 	}
 
@@ -49,6 +49,9 @@ public class FinalScore implements IFinalScore, Comparable<FinalScore>
 
 	/** @see	IFinalScore#getPoints */
 	public int getPoints() { return this.points; }
+
+	/** @see	IFinalScore#getTotal */
+	public int getTotal() { return this.total; }
 
 	/** @see	IFinalScore#getResults */
 	public List<PoolResult> getResults()

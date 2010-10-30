@@ -22,12 +22,14 @@
     <tr>
       <th>Player</th>
       <th>Score</th>
+      <th>Total</th>
       <th colspan="17">Weekly scores (week in parentheses)</th>
     </tr>
     <c:forEach items="${bank.finalScores}" var="finalScore">
     <tr align="right">
       <td>${finalScore.player.name}</td>
       <td>${finalScore.points}</td>
+      <td>${finalScore.total}</td>
       <c:forEach items="${weekIds}" var="weekId">
         <td>
           <c:if test="${fn:length(finalScore.results) >= weekId}">
