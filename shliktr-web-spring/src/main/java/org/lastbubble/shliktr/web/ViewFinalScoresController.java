@@ -13,10 +13,6 @@ import org.springframework.web.servlet.mvc.AbstractController;
  */
 public class ViewFinalScoresController extends AbstractController
 {
-	private static final int[] WEEK_IDS = new int[] {
-		1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
-	};
-
 	protected PoolService poolService;
 
 	private String viewName;
@@ -40,11 +36,7 @@ public class ViewFinalScoresController extends AbstractController
 		HttpServletRequest request, HttpServletResponse response )
 	throws Exception
 	{
-		ModelAndView modelAndView = new ModelAndView(this.viewName);
-
-		modelAndView.addObject("weekIds", WEEK_IDS);
-		modelAndView.addObject("bank", this.poolService.findBank());
-
-		return modelAndView;
+		return new ModelAndView(this.viewName)
+			.addObject("bank", this.poolService.findBank());
 	}
 }

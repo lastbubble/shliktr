@@ -8,40 +8,29 @@
 
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.5/dijit/themes/tundra/tundra.css" />
   <link rel="stylesheet" type="text/css" href="../pool.css" />
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.5/dojox/grid/resources/Grid.css" />
+  <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/dojo/1.5/dojox/grid/resources/tundraGrid.css" />
+  <style>
+    .numberCell { text-align: right; font-size: 0.75em; }
+  </style>
   <title>NFL Pool - Final Scores</title>
 </head>
 
-<body>
+<body class="tundra">
 
   <h1>Final Scores</h1>
 
   <%@ include file="/WEB-INF/jsp/welcome.jsp" %>
 
-  <table border="1" cellpadding="3">
-    <tr>
-      <th>Player</th>
-      <th>Score</th>
-      <th>Total</th>
-      <th colspan="17">Weekly scores (week in parentheses)</th>
-    </tr>
-    <c:forEach items="${bank.finalScores}" var="finalScore">
-    <tr align="right">
-      <td>${finalScore.player.name}</td>
-      <td>${finalScore.points}</td>
-      <td>${finalScore.total}</td>
-      <c:forEach items="${weekIds}" var="weekId">
-        <td>
-          <c:if test="${fn:length(finalScore.results) >= weekId}">
-            ${finalScore.results[weekId - 1].points}&nbsp(${finalScore.results[weekId - 1].week})
-          </c:if>
-        </td>
-      </c:forEach>
-    </tr>
-    </c:forEach>
-  </table>
+  <div style="clear: both;" />
 
-  <table border="1" cellpadding="3">
+  <div id="grid" style="width: 100%;"></div>
+
+  <h1>Accounts</h1>
+
+  <table cellpadding="3">
     <tr>
       <th>Player</th>
       <th>Account</th>
@@ -56,5 +45,42 @@
   <div>Reserve: ${bank.reserve}</div>
 
 </body>
+
+<script type="text/javascript"
+        src="http://ajax.googleapis.com/ajax/libs/dojo/1.5/dojo/dojo.xd.js"
+        djConfig="parseOnLoad: true"></script>
+<script type="text/javascript">
+dojo.require("dojo.data.ItemFileReadStore");
+dojo.require("dojox.grid.DataGrid");
+
+dojo.addOnLoad(function(){
+  var store = new dojo.data.ItemFileReadStore({
+    url: 'finalScores.json'
+  });
+  var weeks = new Array();
+  for( var i = 0; i < 17; i++ ) {
+    weeks.push({field: 'week'+i, name: ' ', width: '50px', classes: 'numberCell'});
+  }
+  console.log(weeks);
+  var grid = new dojox.grid.DataGrid({
+      structure: [
+        {
+          noscroll: true,
+          cells: [
+            {field: 'player', name: 'Player', width: '75px'},
+            {field:  'score', name:  'Score', width: '50px', classes: 'numberCell'},
+            {field:  'total', name:  'Total', width: '50px', classes: 'numberCell'}
+          ]
+        },
+        weeks
+      ],
+      store: store,
+      clientSort: true
+    },
+    dojo.byId('grid')
+  );
+  grid.startup();
+});
+</script>
 
 </html>

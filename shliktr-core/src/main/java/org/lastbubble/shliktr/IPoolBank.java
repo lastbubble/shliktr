@@ -7,6 +7,8 @@ import java.util.List;
  */
 public interface IPoolBank
 {
+	List<? extends IFinalScore> getFinalScores();
+
 	List<? extends IPoolAccount> getAccounts();
 
 	int getReserve();

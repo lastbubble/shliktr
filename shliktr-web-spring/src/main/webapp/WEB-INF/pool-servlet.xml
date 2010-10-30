@@ -73,6 +73,10 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 	      p:viewName="viewHeadToHead"
 	      p:poolService-ref="poolService" />
 
+  <bean id="finalScoresJsonController"
+        class="org.lastbubble.shliktr.web.FinalScoresJsonController"
+        p:poolService-ref="poolService" />
+
 	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="urlMap">
 			<map>
@@ -91,6 +95,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 				<entry key="/viewFinalScores" value-ref="viewFinalScoresController" />
 				<entry key="/getPickResults" value-ref="getPickResultsController" />
 				<entry key="/viewHeadToHead" value-ref="viewHeadToHeadController" />
+				<entry key="/finalScores.json" value-ref="finalScoresJsonController" />
 			</map>
 		</property>
 	</bean>
