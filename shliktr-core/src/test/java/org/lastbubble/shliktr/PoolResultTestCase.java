@@ -77,12 +77,15 @@ public class PoolResultTestCase extends TestCase
 		PoolResult result2 = new PoolResult(week, player, score2, 0, 7, 3);
 		PoolResult result3 = new PoolResult(week, player, score2, 0, 6, 2);
 
+		Score score3 = new Score(5, 7, 6, 8);
+		PoolResult result4 = new PoolResult(week, player, score3, 0, 6, 2);
+
 		List<PoolResult> results = new ArrayList<PoolResult>(Arrays.asList(
-				result1, result2, result3
+				result1, result2, result3, result4
 			)
 		);
 
 		Collections.sort(results);
-		assertEquals(Arrays.asList(result3, result2, result1), results);
+		assertEquals(Arrays.asList(result4, result3, result2, result1), results);
 	}
 }

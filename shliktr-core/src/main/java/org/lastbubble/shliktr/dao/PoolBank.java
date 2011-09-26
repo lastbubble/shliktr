@@ -136,28 +136,74 @@ public class PoolBank implements IPoolBank
 
 		List<PoolAccount> accounts = new ArrayList<PoolAccount>(cnt);
 
-		if( cnt > 0 )
+		int firstPlaceCnt = countFirstPlaceWinners(results);
+
+		if( firstPlaceCnt > 0 )
 		{
-			accounts.add( new PoolAccount(
-					results.get(0).getPlayer(), (int) (.7 * total) - 500
-				)
-			);
-		}
-		if( cnt > 1 )
-		{
-			accounts.add( new PoolAccount(
-					results.get(1).getPlayer(), (int) (.2 * total) - 500
-				)
-			);
-		}
-		if( cnt > 2 )
-		{
-			for( int i = 2; i < cnt; i++ )
+			int loserPos = 2;
+
+			if( firstPlaceCnt > 1 )
 			{
-				accounts.add( new PoolAccount(results.get(i).getPlayer(), -500));
+				int winnings = (int) ((.9 * total) / firstPlaceCnt);
+
+				for( int i = 0; i < firstPlaceCnt; i++ )
+				{
+					accounts.add( new PoolAccount(
+							results.get(i).getPlayer(), winnings - 500
+						)
+					);
+				}
+
+				loserPos = firstPlaceCnt;
+			}
+			else
+			{
+				accounts.add( new PoolAccount(
+						results.get(0).getPlayer(), (int) (.7 * total) - 500
+					)
+				);
+
+				if( cnt > 1 )
+				{
+					accounts.add( new PoolAccount(
+							results.get(1).getPlayer(), (int) (.2 * total) - 500
+						)
+					);
+				}
+			}
+
+			for( ; loserPos < cnt; loserPos++ )
+			{
+				accounts.add( new PoolAccount(results.get(loserPos).getPlayer(), -500));
 			}
 		}
 
 		return accounts;
+	}
+
+	protected int countFirstPlaceWinners( List<PoolResult> results )
+	{
+		int cnt = results.size();
+
+		if( cnt <= 1 ) { return cnt; }
+
+		PoolResult firstResult = results.get(0);
+
+		int winnerCnt = 1;
+
+		for( int i = 1; i < cnt; i++ )
+		{
+			PoolResult result = results.get(i);
+
+			if( result.getPoints() < firstResult.getPoints() ||
+				result.getTiebreakerDiff() > firstResult.getTiebreakerDiff() )
+			{
+				break;
+			}
+
+			winnerCnt++;
+		}
+
+		return winnerCnt;
 	}
 }

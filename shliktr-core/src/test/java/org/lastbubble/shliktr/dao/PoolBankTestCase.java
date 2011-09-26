@@ -100,4 +100,25 @@ public class PoolBankTestCase extends TestCase
 
 		assertEquals(450, bank.getReserve());
 	}
+
+	public void testTieForFirst()
+	{
+		List<PoolResult> results = Arrays.asList(
+			newResult(1, PLAYERS[1], 1),
+			newResult(1, PLAYERS[2], 2),
+			newResult(1, PLAYERS[3], 4),
+			newResult(1, PLAYERS[4], 4)
+		);
+
+		bank = new PoolBank(results);
+
+		List<? extends IPoolAccount> accounts = bank.getAccounts();
+		assertEquals(results.size(), accounts.size());
+		assertAccountEquals(accounts.get(0), PLAYERS[3], 400);
+		assertAccountEquals(accounts.get(1), PLAYERS[4], 400);
+		assertAccountEquals(accounts.get(2), PLAYERS[1], -500);
+		assertAccountEquals(accounts.get(3), PLAYERS[2], -500);
+
+		assertEquals(200, bank.getReserve());
+	}
 }

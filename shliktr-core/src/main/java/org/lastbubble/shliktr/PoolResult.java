@@ -71,7 +71,13 @@ public class PoolResult implements Comparable<PoolResult>
 	public int compareTo( PoolResult result )
 	{
 		int scoreDelta = this.score.compareTo(result.score);
-		return (scoreDelta != 0) ?
-			scoreDelta : getTiebreakerDiff() - result.getTiebreakerDiff();
+
+		if( scoreDelta != 0 ) { return scoreDelta; }
+
+		int tiebreakerDelta = getTiebreakerDiff() - result.getTiebreakerDiff();
+
+		if( tiebreakerDelta != 0 ) { return tiebreakerDelta; }
+
+		return getGamesLost() - result.getGamesLost();
 	}
 }
